@@ -2,6 +2,7 @@ package gram.killergram.domain.sport.domain;
 
 import gram.killergram.domain.user.domain.Student;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,12 @@ public class Sport {
 
     @Column(name = "personnel", nullable = false)
     private Integer personnel;
+
+    @Builder
+    public Sport(String sportName, boolean isPosition, Integer personnel) {
+        this.sportId = UUID.randomUUID();
+        this.sportName = sportName;
+        this.isPosition = isPosition;
+        this.personnel = personnel;
+    }
 }
