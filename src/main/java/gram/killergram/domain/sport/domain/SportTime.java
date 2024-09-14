@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 
-@Entity(name = "sport_time_tbl")
+@Entity(name = "sport_time")
 @Getter
 @NoArgsConstructor
+@Table(name = "sport_time_tbl")
 public class SportTime {
 
     @Id

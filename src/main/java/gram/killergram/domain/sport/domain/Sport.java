@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity(name = "sport_tbl")
+@Entity(name = "sport")
 @Getter
 @NoArgsConstructor
+@Table(name = "sport_tbl")
 public class Sport {
 
     @Id
