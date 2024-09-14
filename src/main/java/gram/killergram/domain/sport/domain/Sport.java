@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "sport_tbl")
@@ -28,6 +30,9 @@ public class Sport {
 
     @Column(name = "personnel", nullable = false)
     private Integer personnel;
+
+    @OneToMany(mappedBy = "sport")
+    private List<SportTime> sportTime = new ArrayList<>();
 
     @Builder
     public Sport(String sportName, boolean isPosition, Integer personnel) {
