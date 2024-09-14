@@ -7,15 +7,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity(name = "student")
 @Getter
 @NoArgsConstructor
 public class Student {
 
+    @Id
+    @Column(name = "user_id")
+    private UUID userId;
+
     @OneToOne
+    @MapsId
     @JoinColumn(name = "user_id")
     @Column(name = "student_id")
-    private User student_id;
+    private User studentId;
 
     @Column(name = "name" , nullable = false , columnDefinition = "VARCHAR(50)")
     private String name;
@@ -29,13 +36,14 @@ public class Student {
     private Ability ability;
 
     @Column(name = "school_number" , nullable = false , columnDefinition = "CHAR(20)")
-    private String school_number;
+    private String schoolNumber;
 
     @Builder
-    public Student(String name, Gender gender, Ability ability, String school_number) {
+    public Student(String name, Gender gender, Ability ability, String schoolNumber) {
+        this.userId = UUID.randomUUID();
         this.name = name;
         this.gender = gender;
         this.ability = ability;
-        this.school_number = school_number;
+        this.schoolNumber = schoolNumber;
     }
 }
