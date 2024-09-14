@@ -1,20 +1,32 @@
 package gram.killergram.domain.user.domain;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
-@RedisHash(value = "RefreshToken",timeToLive = 60 * 60 * 2)
+@RedisHash(value = "RefreshToken")
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class RefreshToken {
+
     @Id
-    private String user_id;
+    @NotBlank
+    private String userId;
 
     @Indexed
     @NotBlank
     private String token;
+
+    @TimeToLive
+    private long ttl;
+
+    public void updateToken(String newToken, long ttl) {
+        this.token = newToken;
+        this.ttl = ttl;
+    }
 }

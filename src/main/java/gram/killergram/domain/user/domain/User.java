@@ -2,30 +2,29 @@ package gram.killergram.domain.user.domain;
 
 import gram.killergram.domain.user.domain.type.Authority;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity(name = "user")
 @Getter
-@Setter
 @NoArgsConstructor
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private UUID user_id;
+    private UUID userId;
 
     @Column(name = "account_id", nullable = false, columnDefinition = "VARCHAR(50)")
-    private String account_id;
+    private String accountId;
 
     @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(255)")
     private String password;
 
     @Column(name = "device_token", nullable = false, columnDefinition = "VARCHAR(255)")
-    private String device_token;
+    private String deviceToken;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "authority", nullable = false, columnDefinition = "VARCHAR(30)")
@@ -33,4 +32,13 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Student student;
+
+    @Builder
+    public User(String accountId, String password, String deviceToken, Authority authority) {
+        this.userId = UUID.randomUUID();
+        this.accountId = accountId;
+        this.password = password;
+        this.deviceToken = deviceToken;
+        this.authority = authority;
+    }
 }
