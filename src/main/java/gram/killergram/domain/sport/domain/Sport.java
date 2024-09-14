@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Entity
+@Entity(name = "sport_tbl")
 @Getter
 @NoArgsConstructor
 public class Sport {
