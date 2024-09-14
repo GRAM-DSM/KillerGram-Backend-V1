@@ -3,15 +3,15 @@ package gram.killergram.domain.user.domain;
 import gram.killergram.domain.user.domain.type.Ability;
 import gram.killergram.domain.user.domain.type.Gender;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity(name = "student")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Student {
+
     @OneToOne
     @JoinColumn(name = "user_id")
     @Column(name = "student_id")
@@ -30,4 +30,12 @@ public class Student {
 
     @Column(name = "school_number" , nullable = false , columnDefinition = "CHAR(20)")
     private String school_number;
+
+    @Builder
+    public Student(String name, Gender gender, Ability ability, String school_number) {
+        this.name = name;
+        this.gender = gender;
+        this.ability = ability;
+        this.school_number = school_number;
+    }
 }
