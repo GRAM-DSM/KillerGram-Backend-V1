@@ -21,7 +21,7 @@ public class SportTime {
     private UUID timeId;
 
     @ManyToOne
-    @JoinColumn(name = "sport_id")
+    @JoinColumn(name = "sport_id", nullable = false)
     private Sport sportId;
 
     @Column(name = "day", nullable = false, columnDefinition = "VACHAR(30)")

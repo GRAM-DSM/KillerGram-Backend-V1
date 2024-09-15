@@ -22,11 +22,11 @@ public class VoteUser {
     private boolean isAttend;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "vote_id")
+    @JoinColumn(name = "vote_id", nullable = false)
     private Vote vote;
 
     @Builder
