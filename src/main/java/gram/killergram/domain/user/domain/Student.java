@@ -24,8 +24,7 @@ public class Student {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "user_id")
-    @Column(name = "student_id")
+    @JoinColumn(name = "student_id", unique = true, nullable = false)
     private User studentId;
 
     @Column(name = "name" , nullable = false , columnDefinition = "VARCHAR(50)")
@@ -42,7 +41,7 @@ public class Student {
     @Column(name = "school_number" , nullable = false , columnDefinition = "CHAR(20)")
     private String schoolNumber;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student" , cascade = CascadeType.ALL)
     private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder

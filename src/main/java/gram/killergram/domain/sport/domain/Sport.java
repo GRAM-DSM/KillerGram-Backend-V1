@@ -32,7 +32,7 @@ public class Sport {
     @Column(name = "personnel", nullable = false)
     private Integer personnel;
 
-    @OneToMany(mappedBy = "sport")
+    @OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
     private List<SportTime> sportTime = new ArrayList<>();
 
     @Builder

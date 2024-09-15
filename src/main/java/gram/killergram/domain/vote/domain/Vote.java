@@ -33,10 +33,10 @@ public class Vote {
     private boolean isEnd;
 
     @OneToOne
-    @JoinColumn(name = "sport_id")
+    @JoinColumn(name = "sport_id",nullable = false)
     private Sport sportId;
 
-    @OneToMany(mappedBy = "vote")
+    @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
     private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder
