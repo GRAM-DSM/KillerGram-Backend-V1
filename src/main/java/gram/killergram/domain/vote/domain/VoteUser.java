@@ -1,9 +1,7 @@
 package gram.killergram.domain.vote.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import gram.killergram.domain.user.domain.Student;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +21,13 @@ public class VoteUser {
     @Column(name = "is_attend", nullable = false)
     private boolean isAttend;
 
-    
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
+    @ManyToOne
+    @JoinColumn(name = "vote_id")
+    private Vote vote;
 
     @Builder
     public VoteUser(boolean isAttend) {

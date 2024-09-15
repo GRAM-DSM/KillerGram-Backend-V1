@@ -1,13 +1,13 @@
 package gram.killergram.domain.vote.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import gram.killergram.domain.sport.domain.Sport;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "vote")
@@ -31,6 +31,13 @@ public class Vote {
 
     @Column(name = "is_end", nullable = false)
     private boolean isEnd;
+
+    @OneToOne
+    @JoinColumn(name = "sport_id")
+    private Sport sportId;
+
+    @OneToMany(mappedBy = "vote")
+    private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder
     public Vote(String voteDate, Integer votePosition, Integer participate, boolean isEnd) {
