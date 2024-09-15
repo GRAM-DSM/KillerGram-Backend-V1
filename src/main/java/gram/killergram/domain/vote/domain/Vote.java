@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,12 @@ public class Vote {
     @Column(name = "is_end", nullable = false)
     private boolean isEnd;
 
+    @Builder
+    public Vote(String voteDate, Integer votePosition, Integer participate, boolean isEnd) {
+        this.voteId = UUID.randomUUID();
+        this.voteDate = voteDate;
+        this.votePosition = votePosition;
+        this.participate = participate;
+        this.isEnd = isEnd;
+    }
 }
