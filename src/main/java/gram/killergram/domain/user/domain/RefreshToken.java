@@ -16,7 +16,7 @@ public class RefreshToken {
 
     @Id
     @NotBlank
-    private String userId;
+    private String accountId;
 
     @Indexed
     @NotBlank
