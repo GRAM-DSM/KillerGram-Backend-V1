@@ -11,7 +11,8 @@ public enum ErrorCode {
     EXPIRED_TOKEN(401, "Expired Token"),
     PASSWORD_MISMATCH(401, "Password Mismatch"),
 
-    USER_NOT_FOUND(404, "User Not Found");
+    USER_NOT_FOUND(404, "User Not Found"),
+    USER_ALREADY_EXITS(409, "User Already Exits");
 
     private final int status;
     private final String message;

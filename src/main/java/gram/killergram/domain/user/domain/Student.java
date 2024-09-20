@@ -25,7 +25,7 @@ public class Student {
     @OneToOne
     @MapsId
     @JoinColumn(name = "student_id", unique = true, nullable = false)
-    private User studentId;
+    private UUID studentId;
 
     @Column(name = "name" , nullable = false , columnDefinition = "VARCHAR(50)")
     private String name;
@@ -45,7 +45,7 @@ public class Student {
     private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder
-    public Student(User studentId ,String name, Gender gender, Ability ability, String schoolNumber) {
+    public Student(UUID studentId ,String name, Gender gender, Ability ability, String schoolNumber) {
         this.studentId = studentId;
         this.name = name;
         this.gender = gender;

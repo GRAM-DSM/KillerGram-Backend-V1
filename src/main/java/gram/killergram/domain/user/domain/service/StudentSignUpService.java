@@ -1,5 +1,6 @@
 package gram.killergram.domain.user.domain.service;
 
+import gram.killergram.domain.user.exception.UserAlreadyExitsException;
 import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
 import gram.killergram.domain.user.domain.Student;
 import gram.killergram.domain.user.domain.User;
@@ -19,14 +20,13 @@ public class StudentSignUpService {
 
     private final UserJpaRepository userJpaRepository;
     private final StudentJpaRepository studentJpaRepository;
-    private final UserFacade userFacade;
     private final PasswordEncoder passwordEncoder;
 
 
     @Transactional
     public void execute(StudentSignUpRequest request) {
-        if (userJpaRepository.findByAccountId(request.getAccountId()).isEmpty()) {
-            throw UserNotFoundException.EXCEPTION;
+        if (userJpaRepository.findByAccountId(request.getAccountId()).isPresent()) {
+            throw UserAlreadyExitsException.EXCEPTION;
         }
 
         User user = new User(
@@ -39,7 +39,7 @@ public class StudentSignUpService {
 
 
         Student student = Student.builder()
-                .studentId(user)
+                .studentId(user.getUserId())
                 .name(request.getName())
                 .gender(request.getGender())
                 .ability(request.getAbility())
