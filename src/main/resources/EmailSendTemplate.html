@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이메일 인증</title>
+    <style>
+        body{font-family:'Malgun Gothic',sans-serif;background-color:#f5f6f7;margin:0;padding:0;}
+        .container{max-width:600px;margin:20px auto;background-color:#ffffff;border:1px solid #e5e5e5;border-radius:8px;padding:40px;}
+        .logo{text-align:center;margin-bottom:30px;}
+        .logo img{width:150px;}
+        .title{font-size:24px;font-weight:bold;color:#1ec800;text-align:center;margin-bottom:20px;}
+        .content{font-size:16px;color:#333333;line-height:1.6;margin-bottom:30px;}
+        .code{background-color:#f5f6f7;border-radius:4px;padding:15px;text-align:center;font-size:28px;font-weight:bold;color:#03c75a;letter-spacing:4px;margin-bottom:30px;}
+        .footer{font-size:14px;color:#767676;text-align:center;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <img src="https://avatars.githubusercontent.com/u/54353691?s=200&v=4" alt="KillerGram">
+    </div>
+    <h1 class="title">이메일 주소 인증</h1>
+    <p class="content">안녕하세요. KillerGram 인증 메일입니다.<br>아래의 인증 번호를 입력하여 이메일 주소 인증을 완료해 주세요.</p>
+    <div class="code" th:text="${verificationCode}"></div>
+    <p class="footer">본 메일은 발신전용이며, 문의에 대한 회신은 처리되지 않습니다.<br>© DSM Gram. All rights reserved.</p>
+</div>
+</body>
+</html>
