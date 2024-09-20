@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class EmailVerifyService {
+public class EmailVerificationService {
     private final UserJpaRepository userJpaRepository;
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Long> codeExpiration = new ConcurrentHashMap<>();

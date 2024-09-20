@@ -15,7 +15,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class EmailSendService {
+public class EmailSenderService {
 
     private final JavaMailSender mailSender;
 
