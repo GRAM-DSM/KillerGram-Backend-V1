@@ -45,8 +45,8 @@ public class Student {
     private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder
-    public Student(String name, Gender gender, Ability ability, String schoolNumber) {
-        this.userId = UUID.randomUUID();
+    public Student(User studentId ,String name, Gender gender, Ability ability, String schoolNumber) {
+        this.studentId = studentId;
         this.name = name;
         this.gender = gender;
         this.ability = ability;
