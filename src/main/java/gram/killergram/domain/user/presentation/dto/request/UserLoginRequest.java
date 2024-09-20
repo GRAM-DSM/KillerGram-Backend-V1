@@ -1,4 +1,4 @@
-package gram.killergram.domain.user.controller.dto.request;
+package gram.killergram.domain.user.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

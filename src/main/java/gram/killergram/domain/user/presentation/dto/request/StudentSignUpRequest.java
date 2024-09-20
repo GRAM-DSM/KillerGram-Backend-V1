@@ -1,4 +1,4 @@
-package gram.killergram.domain.user.controller.dto.request;
+package gram.killergram.domain.user.presentation.dto.request;
 
 import gram.killergram.domain.user.domain.type.Ability;
 import gram.killergram.domain.user.domain.type.Gender;

@@ -1,6 +1,6 @@
 package gram.killergram.domain.user.domain.service;
 
-import gram.killergram.domain.user.controller.dto.request.StudentSignUpRequest;
+import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
 import gram.killergram.domain.user.domain.Student;
 import gram.killergram.domain.user.domain.User;
 import gram.killergram.domain.user.domain.type.Authority;
