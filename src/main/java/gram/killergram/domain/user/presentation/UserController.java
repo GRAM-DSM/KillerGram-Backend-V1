@@ -6,10 +6,10 @@ import gram.killergram.domain.user.presentation.dto.request.EmailValidCodeReques
 import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
 import gram.killergram.domain.user.presentation.dto.request.UserLoginRequest;
 import gram.killergram.domain.user.presentation.dto.request.EmailVerificationRequest;
-import gram.killergram.domain.user.domain.service.StudentSignUpService;
-import gram.killergram.domain.user.domain.service.UserLoginService;
-import gram.killergram.domain.user.domain.service.EmailSenderService;
-import gram.killergram.domain.user.domain.service.EmailVerificationService;
+import gram.killergram.domain.user.service.StudentSignUpService;
+import gram.killergram.domain.user.service.UserLoginService;
+import gram.killergram.domain.user.service.EmailSenderService;
+import gram.killergram.domain.user.service.EmailVerificationService;
 import gram.killergram.domain.user.presentation.dto.response.TokenResponse;
 import gram.killergram.domain.user.presentation.dto.response.VerifiedEmailResponse;
 import jakarta.mail.MessagingException;

@@ -1,4 +1,4 @@
-package gram.killergram.domain.user.domain.service;
+package gram.killergram.domain.user.service;
 
 import gram.killergram.domain.user.exception.UserAlreadyExistsException;
 import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
