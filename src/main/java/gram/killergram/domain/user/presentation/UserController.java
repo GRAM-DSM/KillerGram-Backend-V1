@@ -35,11 +35,13 @@ public class UserController {
         studentSignUpService.execute(request);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
     public TokenResponse userLogin(@RequestBody @Valid UserLoginRequest request) {
         return userLoginService.execute(request);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/send-verification")
     public void sendVerificationEmail(@RequestBody @Valid EmailVerificationRequest request) {
         try {
@@ -50,6 +52,7 @@ public class UserController {
         }
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/verify-email")
     public VerifiedEmailResponse verifyEmail(@RequestBody @Valid EmailValidCodeRequest request) {
         boolean isVerified = emailVerificationService.verifyEmail(request.getEmail(), request.getCode());
