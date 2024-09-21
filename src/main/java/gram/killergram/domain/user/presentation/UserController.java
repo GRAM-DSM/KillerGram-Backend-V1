@@ -2,14 +2,8 @@ package gram.killergram.domain.user.presentation;
 
 import gram.killergram.domain.user.exception.email.EmailVerificationFailedException;
 import gram.killergram.domain.user.exception.email.FailedToSendEmailException;
-import gram.killergram.domain.user.presentation.dto.request.EmailValidCodeRequest;
-import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
-import gram.killergram.domain.user.presentation.dto.request.UserLoginRequest;
-import gram.killergram.domain.user.presentation.dto.request.EmailVerificationRequest;
-import gram.killergram.domain.user.service.StudentSignUpService;
-import gram.killergram.domain.user.service.UserLoginService;
-import gram.killergram.domain.user.service.EmailSenderService;
-import gram.killergram.domain.user.service.EmailVerificationService;
+import gram.killergram.domain.user.presentation.dto.request.*;
+import gram.killergram.domain.user.service.*;
 import gram.killergram.domain.user.presentation.dto.response.TokenResponse;
 import gram.killergram.domain.user.presentation.dto.response.VerifiedEmailResponse;
 import jakarta.mail.MessagingException;
@@ -28,6 +22,7 @@ public class UserController {
     private final UserLoginService userLoginService;
     private final EmailSenderService emailSenderService;
     private final EmailVerificationService emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/student")
@@ -61,5 +56,11 @@ public class UserController {
         } else {
             throw EmailVerificationFailedException.EXCEPTION;
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/reset-password")
+    public void resetPassword(@RequestBody @Valid PasswordResetRequest passwordResetRequest) {
+        passwordResetService.resetPassword(passwordResetRequest);
     }
 }
