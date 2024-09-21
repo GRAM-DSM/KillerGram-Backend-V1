@@ -15,8 +15,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -39,21 +42,21 @@ public class UserController {
     }
 
     @PostMapping("/send-verification")
-    public String sendVerificationEmail(@RequestBody @Valid EmailVerificationRequest request) {
+    public ResponseEntity<Map<String, String>> sendVerificationEmail(@RequestBody @Valid EmailVerificationRequest request) {
         try {
             String verificationCode = emailSenderService.sendVerificationEmail(request.getEmail());
             emailVerificationService.saveVerificationCode(request.getEmail(), verificationCode);
-            return "OK"; //200
+            return ResponseEntity.ok(Collections.singletonMap("user_email", request.getEmail()));
         } catch (MessagingException | IOException e) {
             throw FailedToSendEmailException.EXCEPTION;
         }
     }
 
     @PostMapping("/verify-email")
-    public String verifyEmail(@RequestBody @Valid EmailValidCodeRequest request) {
+    public ResponseEntity<Map<String, String>> verifyEmail(@RequestBody @Valid EmailValidCodeRequest request) {
         boolean isVerified = emailVerificationService.verifyEmail(request.getEmail(), request.getCode());
         if (isVerified) {
-            return "OK"; //200
+            return ResponseEntity.ok(Collections.singletonMap("user_email", request.getEmail()));
         } else {
             throw FailedToSendEmailException.EXCEPTION;
         }
