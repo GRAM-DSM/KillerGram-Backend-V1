@@ -3,6 +3,7 @@ package gram.killergram.domain.user.domain.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -41,10 +42,11 @@ public class EmailSenderService {
         return String.format("%06d", random.nextInt(10000));
     }
 
-    private final Path templatePath = Path.of("src/main/resources/EmailSendTemplate.html");
+    @Value("${email.template.path}")
+    private String templatePath;
 
     public String getHtmlContent(String verificationCode) throws IOException {
-        String content = Files.readString(templatePath);
+        String content = Files.readString(Path.of(templatePath));
         return content.replace("${verificationCode}", verificationCode);
     }
 }

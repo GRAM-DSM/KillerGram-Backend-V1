@@ -39,3 +39,7 @@ jwt:
   secret: ${SECRET}
   accessExpiration: 271000
   refreshExpiration: 604800
+
+email:
+  template:
+    path: src/main/resources/EmailSendTemplate.html

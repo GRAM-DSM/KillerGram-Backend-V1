@@ -1,5 +1,7 @@
 package gram.killergram.domain.user.presentation;
 
+import gram.killergram.domain.user.exception.FailedToSendEmailException;
+import gram.killergram.domain.user.exception.UserAlreadyExistsException;
 import gram.killergram.domain.user.presentation.dto.request.EmailValidCodeRequest;
 import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
 import gram.killergram.domain.user.presentation.dto.request.UserLoginRequest;
@@ -41,9 +43,9 @@ public class UserController {
         try {
             String verificationCode = emailSenderService.sendVerificationEmail(request.getEmail());
             emailVerificationService.saveVerificationCode(request.getEmail(), verificationCode);
-            return "Verification email sent successfully";
+            return "OK"; //200
         } catch (MessagingException | IOException e) {
-            return "Failed to send verification email";
+            throw FailedToSendEmailException.EXCEPTION;
         }
     }
 
@@ -51,9 +53,9 @@ public class UserController {
     public String verifyEmail(@RequestBody @Valid EmailValidCodeRequest request) {
         boolean isVerified = emailVerificationService.verifyEmail(request.getEmail(), request.getCode());
         if (isVerified) {
-            return "Email verified successfully";
+            return "OK"; //200
         } else {
-            return "Invalid verification code";
+            throw FailedToSendEmailException.EXCEPTION;
         }
     }
 }
