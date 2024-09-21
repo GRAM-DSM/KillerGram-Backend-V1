@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    INVALID_TOKEN(401, "Invalid Token"),
+    EMAIL_CODE_MISMATCH(401, "Email code mismatch"),
     EXPIRED_TOKEN(401, "Expired Token"),
     PASSWORD_MISMATCH(401, "Password Mismatch"),
 

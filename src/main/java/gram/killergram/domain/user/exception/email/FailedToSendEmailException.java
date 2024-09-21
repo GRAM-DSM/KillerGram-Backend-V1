@@ -1,4 +1,4 @@
-package gram.killergram.domain.user.exception;
+package gram.killergram.domain.user.exception.email;
 
 import gram.killergram.global.error.ErrorCode;
 import gram.killergram.global.error.KillerGramException;

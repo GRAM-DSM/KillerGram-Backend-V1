@@ -1,7 +1,7 @@
 package gram.killergram.domain.user.presentation;
 
-import gram.killergram.domain.user.exception.FailedToSendEmailException;
-import gram.killergram.domain.user.exception.UserAlreadyExistsException;
+import gram.killergram.domain.user.exception.email.EmailVerificationFailedException;
+import gram.killergram.domain.user.exception.email.FailedToSendEmailException;
 import gram.killergram.domain.user.presentation.dto.request.EmailValidCodeRequest;
 import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
 import gram.killergram.domain.user.presentation.dto.request.UserLoginRequest;
@@ -17,11 +17,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -59,7 +56,7 @@ public class UserController {
         if (isVerified) {
             return new VerifiedEmailResponse(request.getEmail());
         } else {
-            throw FailedToSendEmailException.EXCEPTION;
+            throw EmailVerificationFailedException.EXCEPTION;
         }
     }
 }
