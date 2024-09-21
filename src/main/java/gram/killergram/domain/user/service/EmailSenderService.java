@@ -1,4 +1,4 @@
-package gram.killergram.domain.user.domain.service;
+package gram.killergram.domain.user.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
