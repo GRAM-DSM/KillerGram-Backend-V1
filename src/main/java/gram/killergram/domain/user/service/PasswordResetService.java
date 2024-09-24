@@ -25,6 +25,6 @@ public class PasswordResetService {
         }
 
         user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
-
+        userJpaRepository.save(user);
     }
 }
