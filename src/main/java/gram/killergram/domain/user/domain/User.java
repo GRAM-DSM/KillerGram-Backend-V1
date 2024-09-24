@@ -42,4 +42,8 @@ public class User {
         this.deviceToken = deviceToken;
         this.authority = authority;
     }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
