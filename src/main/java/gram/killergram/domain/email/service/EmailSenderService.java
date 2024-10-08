@@ -25,6 +25,9 @@ public class EmailSenderService {
     private final JavaMailSender mailSender;
     private final EmailCrudRepository emailCrudRepository;
 
+    @Value("${spring.mail.username}")
+    private String senderEmail;
+
     @Transactional
     public void sendVerificationEmail(EmailVerificationRequest emailVerificationRequest) throws MessagingException, IOException {
         String verificationCode = generateVerificationCode();
@@ -32,7 +35,7 @@ public class EmailSenderService {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom("dsm2024gram@gmail.com");
+        helper.setFrom(senderEmail);
         helper.setTo(emailVerificationRequest.getEmail());
         helper.setSubject("KillerGram 이메일 인증");
         helper.setText(htmlContent, true);
