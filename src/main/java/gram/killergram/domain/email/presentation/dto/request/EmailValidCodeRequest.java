@@ -17,6 +17,7 @@ public class EmailValidCodeRequest {
     private String code;
 
     @NotBlank
-    @Size(max = 30)
+    @Size(max = 100)
+    @jakarta.validation.constraints.Email
     private String email;
 }
