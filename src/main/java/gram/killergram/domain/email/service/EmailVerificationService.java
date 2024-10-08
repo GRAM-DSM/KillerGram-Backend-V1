@@ -1,39 +1,40 @@
 package gram.killergram.domain.email.service;
 
+import gram.killergram.domain.email.domain.Email;
+import gram.killergram.domain.email.exception.InvalidVerificationCodeException;
+import gram.killergram.domain.email.exception.MissMatchVerificationCodeException;
+import gram.killergram.domain.email.presentation.dto.request.EmailValidCodeRequest;
+import gram.killergram.domain.email.repository.EmailCrudRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService {
 
-    private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, Long> codeExpiration = new ConcurrentHashMap<>();
-    private static final long EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(5);
+    private final EmailCrudRepository emailCrudRepository;
 
     @Transactional
-    public boolean verifyEmail(String email, String code) {
-        Long expirationTime = codeExpiration.get(email);
-        if (expirationTime == null || System.currentTimeMillis() > expirationTime) {
-            return false;
-        }
+    public void verifyEmail(EmailValidCodeRequest emailValidCodeRequest) {
+        Optional<Email> email = emailCrudRepository.findById(emailValidCodeRequest.getEmail());
 
-        String storedCode = verificationCodes.get(email);
-        if (storedCode != null && storedCode.equals(code)) {
-            verificationCodes.remove(email);
-            codeExpiration.remove(email);
-            return true;
+        if (email.isPresent()) {
+            if (emailValidCodeRequest.getCode().equals(email.get().getAuthorizationToken())) {
+                if (email.get().getCertifiedTime().isAfter(LocalDateTime.now())) {
+                    email.get().changeStatusTrue();
+                } else {
+                    throw InvalidVerificationCodeException.EXCEPTION;
+                }
+            } else {
+                throw MissMatchVerificationCodeException.EXCEPTION;
+            }
+        } else {
+            throw InvalidVerificationCodeException.EXCEPTION;
         }
-        return false;
-    }
-
-    @Transactional
-    public void saveVerificationCode(String email, String code) {
-        verificationCodes.put(email, code);
-        codeExpiration.put(email, System.currentTimeMillis() + EXPIRATION_TIME);
     }
 }

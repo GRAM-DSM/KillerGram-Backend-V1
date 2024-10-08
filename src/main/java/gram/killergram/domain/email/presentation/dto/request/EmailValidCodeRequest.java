@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class EmailValidCodeRequest {
+
     @NotBlank
     private String code;
 

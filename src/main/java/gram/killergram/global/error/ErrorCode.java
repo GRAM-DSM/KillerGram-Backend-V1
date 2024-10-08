@@ -7,10 +7,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
+
     EMAIL_CODE_MISMATCH(401, "Email code mismatch"),
     EXPIRED_TOKEN(401, "Expired Token"),
     PASSWORD_MISMATCH(401, "Password Mismatch"),
+    VERIFICATIONCODE_MISSMATCH(401, "Verification code mismatch"),
 
+    EMAIL_VERIFICATION_NOT_FOUND(404, "Email Verification Not Found"),
     USER_NOT_FOUND(404, "User Not Found"),
     USER_ALREADY_EXISTS(409, "User Already Exists"),
     SAME_PASSWORD(409, "Same Password"),

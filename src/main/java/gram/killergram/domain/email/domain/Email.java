@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -16,12 +18,19 @@ import lombok.NoArgsConstructor;
 public class Email {
 
     @Id
-    @Column(name = "email", nullable = false, unique = true, columnDefinition = "VACAHR(200)")
+    @Column(name = "email", nullable = false, unique = true, columnDefinition = "VACHAR(200)")
     private String email;
 
-    @Column(name = "authorization_token", nullable = false, columnDefinition = "INT(6)")
-    private Integer authorizationToken;
+    @Column(name = "authorization_token", nullable = false, columnDefinition = "CHAR(6)")
+    private String authorizationToken;
 
     @Column(name = "authorization_status", nullable = false)
     private Boolean authorizationStatus;
+
+    @Column(name="certified_time", nullable = false, columnDefinition = "DATETIME")
+    private LocalDateTime certifiedTime;
+
+    public void changeStatusTrue(){
+        this.authorizationStatus = Boolean.TRUE;
+    }
 }

@@ -1,7 +1,5 @@
 package gram.killergram.domain.user.presentation;
 
-import gram.killergram.domain.email.exception.EmailVerificationFailedException;
-import gram.killergram.domain.email.exception.FailedToSendEmailException;
 import gram.killergram.domain.email.presentation.dto.request.EmailValidCodeRequest;
 import gram.killergram.domain.email.presentation.dto.request.EmailVerificationRequest;
 import gram.killergram.domain.email.service.EmailSenderService;
