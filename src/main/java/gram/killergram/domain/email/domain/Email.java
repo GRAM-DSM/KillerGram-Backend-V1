@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Email {
 
     @Id
-    @Column(name = "email", nullable = false, unique = true, columnDefinition = "VACHAR(200)")
+    @Column(name = "email", nullable = false, unique = true, columnDefinition = "VARCHAR(200)")
     @jakarta.validation.constraints.Email
     private String email;
 
