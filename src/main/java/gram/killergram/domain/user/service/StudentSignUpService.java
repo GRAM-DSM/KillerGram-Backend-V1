@@ -1,5 +1,9 @@
 package gram.killergram.domain.user.service;
 
+import gram.killergram.domain.email.domain.Email;
+import gram.killergram.domain.email.exception.InvalidVerificationCodeException;
+import gram.killergram.domain.email.exception.UnauthorizedRequestException;
+import gram.killergram.domain.email.repository.EmailCrudRepository;
 import gram.killergram.domain.user.exception.UserAlreadyExistsException;
 import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest;
 import gram.killergram.domain.user.domain.Student;
@@ -14,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class StudentSignUpService {
@@ -21,7 +27,7 @@ public class StudentSignUpService {
     private final UserJpaRepository userJpaRepository;
     private final StudentJpaRepository studentJpaRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final EmailCrudRepository emailCrudRepository;
 
     @Transactional
     public void execute(StudentSignUpRequest request) {
@@ -29,23 +35,36 @@ public class StudentSignUpService {
             throw UserAlreadyExistsException.EXCEPTION;
         }
 
-        User user = new User(
-                request.getAccountId(),
-                passwordEncoder.encode(request.getPassword()),
-                request.getDeviceToken(),
-                Authority.STUDENT
-        );
-        user = userJpaRepository.save(user);
+        Optional<Email> email = emailCrudRepository.findById(request.getAccountId());
+
+        if (email.isPresent()) {
+            if (email.get().getAuthorizationStatus()) {
+
+                User user = new User(
+                        request.getAccountId(),
+                        passwordEncoder.encode(request.getPassword()),
+                        request.getDeviceToken(),
+                        Authority.STUDENT
+                );
+                user = userJpaRepository.save(user);
 
 
-        Student student = Student.builder()
-                .studentId(user.getUserId())
-                .name(request.getName())
-                .gender(request.getGender())
-                .ability(request.getAbility())
-                .schoolNumber(request.getSchoolNumber())
-                .build();
+                Student student = Student.builder()
+                        .studentId(user.getUserId())
+                        .name(request.getName())
+                        .gender(request.getGender())
+                        .ability(request.getAbility())
+                        .schoolNumber(request.getSchoolNumber())
+                        .build();
 
-        studentJpaRepository.save(student);
+                studentJpaRepository.save(student);
+
+                emailCrudRepository.delete(email.get());
+            } else {
+                throw UnauthorizedRequestException.EXCEPTION;
+            }
+        } else {
+            throw InvalidVerificationCodeException.EXCEPTION;
+        }
     }
 }
