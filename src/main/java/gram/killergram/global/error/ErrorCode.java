@@ -11,7 +11,7 @@ public enum ErrorCode {
     EMAIL_CODE_MISMATCH(401, "Email code mismatch"),
     EXPIRED_TOKEN(401, "Expired Token"),
     PASSWORD_MISMATCH(401, "Password Mismatch"),
-    VERIFICATIONCODE_MISSMATCH(401, "Verification code mismatch"),
+    VERIFICATION_CODE_MISMATCH(401, "Verification code mismatch"),
 
     UNAUTHORIZED_REQUEST(403, "Unauthorized Request"),
 
