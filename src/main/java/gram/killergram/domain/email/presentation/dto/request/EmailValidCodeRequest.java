@@ -1,4 +1,4 @@
-package gram.killergram.domain.user.presentation.dto.request;
+package gram.killergram.domain.email.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class EmailVerificationRequest {
+public class EmailValidCodeRequest {
+    @NotBlank
+    private String code;
+
     @NotBlank
     @Size(max = 30)
     private String email;

@@ -1,11 +1,15 @@
 package gram.killergram.domain.user.presentation;
 
-import gram.killergram.domain.user.exception.email.EmailVerificationFailedException;
-import gram.killergram.domain.user.exception.email.FailedToSendEmailException;
+import gram.killergram.domain.email.exception.EmailVerificationFailedException;
+import gram.killergram.domain.email.exception.FailedToSendEmailException;
+import gram.killergram.domain.email.presentation.dto.request.EmailValidCodeRequest;
+import gram.killergram.domain.email.presentation.dto.request.EmailVerificationRequest;
+import gram.killergram.domain.email.service.EmailSenderService;
+import gram.killergram.domain.email.service.EmailVerificationService;
 import gram.killergram.domain.user.presentation.dto.request.*;
 import gram.killergram.domain.user.service.*;
 import gram.killergram.domain.user.presentation.dto.response.TokenResponse;
-import gram.killergram.domain.user.presentation.dto.response.VerifiedEmailResponse;
+import gram.killergram.domain.email.presentation.dto.response.VerifiedEmailResponse;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

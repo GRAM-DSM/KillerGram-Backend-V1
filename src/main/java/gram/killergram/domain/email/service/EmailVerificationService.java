@@ -1,4 +1,4 @@
-package gram.killergram.domain.user.service;
+package gram.killergram.domain.email.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
