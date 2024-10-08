@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class EmailSenderService {
     }
 
     private String generateVerificationCode() {
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
         return String.format("%04d", random.nextInt(10000));
     }
 
