@@ -27,23 +27,19 @@ public class PasswordResetService {
         User user = userJpaRepository.findByAccountId(passwordResetRequest.getAccountId())
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
-        Optional<Email> email = emailCrudRepository.findById(passwordResetRequest.getAccountId());
-        if(email.isPresent()) {
-            if (email.get().getAuthorizationStatus()) {
-
-                if (passwordEncoder.matches(passwordResetRequest.getPassword(), user.getPassword())) {
-                    throw SamePasswordException.EXCEPTION;
-                }
-
-                user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
-                userJpaRepository.save(user);
-
-                emailCrudRepository.delete(email.get());
-            } else {
-                throw UnauthorizedRequestException.EXCEPTION;
+        Email email = emailCrudRepository.findById(passwordResetRequest.getAccountId())
+                .orElseThrow(() -> InvalidVerificationCodeException.EXCEPTION);
+        if (email.getAuthorizationStatus()) {
+            if (passwordEncoder.matches(passwordResetRequest.getPassword(), user.getPassword())) {
+                throw SamePasswordException.EXCEPTION;
             }
+
+            user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
+            userJpaRepository.save(user);
+
+            emailCrudRepository.delete(email);
         } else {
-            throw InvalidVerificationCodeException.EXCEPTION;
+            throw UnauthorizedRequestException.EXCEPTION;
         }
     }
 }
