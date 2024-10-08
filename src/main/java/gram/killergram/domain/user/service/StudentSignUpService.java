@@ -37,34 +37,33 @@ public class StudentSignUpService {
 
         Optional<Email> email = emailCrudRepository.findById(request.getAccountId());
 
-        if (email.isPresent()) {
-            if (email.get().getAuthorizationStatus()) {
-
-                User user = new User(
-                        request.getAccountId(),
-                        passwordEncoder.encode(request.getPassword()),
-                        request.getDeviceToken(),
-                        Authority.STUDENT
-                );
-                user = userJpaRepository.save(user);
-
-
-                Student student = Student.builder()
-                        .studentId(user.getUserId())
-                        .name(request.getName())
-                        .gender(request.getGender())
-                        .ability(request.getAbility())
-                        .schoolNumber(request.getSchoolNumber())
-                        .build();
-
-                studentJpaRepository.save(student);
-
-                emailCrudRepository.delete(email.get());
-            } else {
-                throw UnauthorizedRequestException.EXCEPTION;
-            }
-        } else {
+        if (!email.isPresent()) {
             throw InvalidVerificationCodeException.EXCEPTION;
         }
+
+        if (!email.get().getAuthorizationStatus()) {
+            throw UnauthorizedRequestException.EXCEPTION;
+        }
+
+        User user = new User(
+                request.getAccountId(),
+                passwordEncoder.encode(request.getPassword()),
+                request.getDeviceToken(),
+                Authority.STUDENT
+        );
+        user = userJpaRepository.save(user);
+
+
+        Student student = Student.builder()
+                .studentId(user.getUserId())
+                .name(request.getName())
+                .gender(request.getGender())
+                .ability(request.getAbility())
+                .schoolNumber(request.getSchoolNumber())
+                .build();
+
+        studentJpaRepository.save(student);
+
+        emailCrudRepository.delete(email.get());
     }
 }
