@@ -23,18 +23,17 @@ public class EmailVerificationService {
     public void verifyEmail(EmailValidCodeRequest emailValidCodeRequest) {
         Optional<Email> email = emailCrudRepository.findById(emailValidCodeRequest.getEmail());
 
-        if (email.isPresent()) {
-            if (emailValidCodeRequest.getCode().equals(email.get().getAuthorizationToken())) {
-                if (email.get().getCertifiedTime().isAfter(LocalDateTime.now())) {
-                    email.get().changeStatusTrue();
-                } else {
-                    throw InvalidVerificationCodeException.EXCEPTION;
-                }
-            } else {
-                throw MismatchVerificationCodeException.EXCEPTION;
-            }
-        } else {
+        if (email.isEmpty()) {
             throw InvalidVerificationCodeException.EXCEPTION;
         }
+        Email emailEntity = email.get();
+        if (!emailValidCodeRequest.getCode().equals(emailEntity.getAuthorizationToken())) {
+            throw MismatchVerificationCodeException.EXCEPTION;
+        }
+        if (emailEntity.getCertifiedTime().isBefore(LocalDateTime.now())) {
+            throw InvalidVerificationCodeException.EXCEPTION;
+        }
+        emailEntity.changeStatusTrue();
+
     }
 }
