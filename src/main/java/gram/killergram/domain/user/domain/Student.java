@@ -45,9 +45,8 @@ public class Student {
     private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder
-    public Student(User user, UUID userId, String name, Gender gender, Ability ability, String schoolNumber) {
+    public Student(User user, String name, Gender gender, Ability ability, String schoolNumber) {
         this.user = user;
-        this.userId = userId;
         this.name = name;
         this.gender = gender;
         this.ability = ability;
