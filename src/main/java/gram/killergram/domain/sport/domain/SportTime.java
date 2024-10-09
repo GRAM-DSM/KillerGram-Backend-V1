@@ -17,22 +17,24 @@ import java.util.UUID;
 public class SportTime {
 
     @Id
-    @Column(name = "time_id",unique = true, nullable = false)
+    @Column(name = "time_id", unique = true, nullable = false)
     private UUID timeId;
 
     @ManyToOne
     @JoinColumn(name = "sport_id", nullable = false)
-    private Sport sportId;
+    private Sport sport;
 
-    @Column(name = "day", nullable = false, columnDefinition = "VACHAR(30)")
+    @Column(name = "day", nullable = false, columnDefinition = "VARCHAR(30)")
     private Day day;
 
-    @Column(name = "time_slot", nullable = false, columnDefinition = "VACHAR(20)")
+    @Column(name = "time_slot", nullable = false, columnDefinition = "VARCHAR(20)")
     private TimeSlot timeSlot;
 
     @Builder
     public SportTime(Day day, TimeSlot timeSlot) {
+        this.timeId = UUID.randomUUID();
         this.day = day;
         this.timeSlot = timeSlot;
     }
 }
+

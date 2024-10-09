@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
@@ -43,7 +44,6 @@ public class EmailSenderService {
         mailSender.send(message);
 
         LocalDateTime end = LocalDateTime.now().plusMinutes(5);
-
         Email email = new Email(emailVerificationRequest.getEmail(), verificationCode, false, end);
         emailCrudRepository.save(email);
     }
@@ -56,8 +56,12 @@ public class EmailSenderService {
     @Value("${email.template.path}")
     private String templatePath;
 
-    public String getHtmlContent(String verificationCode) throws IOException {
-        String content = Files.readString(Path.of(templatePath));
-        return content.replace("${verificationCode}", verificationCode);
+    private String getHtmlContent(String verificationCode) throws IOException {
+        // 템플릿 파일 내용을 읽어옵니다.
+        String content = Files.readString(Path.of(templatePath), StandardCharsets.UTF_8);
+        System.out.println("템플릿 내용 읽기 전: " + content); // 템플릿 내용을 로그로 출력
+        content = content.replace("{{verificationCode}}", verificationCode);
+        System.out.println("변경된 템플릿 내용: " + content); // 변경 후의 내용을 로그로 출력
+        return content;
     }
 }

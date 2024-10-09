@@ -15,7 +15,8 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Column(name = "user_id",unique = true, nullable = false, columnDefinition = "CHAR(36)")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID userId;
 
     @Column(name = "account_id", nullable = false, columnDefinition = "VARCHAR(50)")
@@ -31,12 +32,11 @@ public class User {
     @Column(name = "authority", nullable = false, columnDefinition = "VARCHAR(30)")
     private Authority authority;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Student student;
 
     @Builder
     public User(String accountId, String password, String deviceToken, Authority authority) {
-        this.userId = UUID.randomUUID();
         this.accountId = accountId;
         this.password = password;
         this.deviceToken = deviceToken;
@@ -47,3 +47,4 @@ public class User {
         this.password = password;
     }
 }
+

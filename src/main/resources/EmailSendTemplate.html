@@ -4,26 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이메일 인증</title>
-    <style>
-        body{font-family:'Malgun Gothic',sans-serif;background-color:#f5f6f7;margin:0;padding:0;}
-        .container{max-width:600px;margin:20px auto;background-color:#000000;border:1px solid #e5e5e5;border-radius:8px;padding:40px;}
-        .logo{text-align:center;margin-bottom:30px;}
-        .logo img{width:150px;}
-        .title{font-size:24px;font-weight:bold;color:#9EFF00;text-align:center;margin-bottom:20px;}
-        .content{font-size:16px;color:#767676;line-height:1.6;margin-bottom:30px;}
-        .code{background-color:#212121;border-radius:4px;padding:15px;text-align:center;font-size:28px;font-weight:bold;color:#9EFF00;letter-spacing:4px;margin-bottom:30px;}
-        .footer{font-size:14px;color:#767676;text-align:center;}
-    </style>
 </head>
-<body>
-<div class="container">
-    <div class="logo">
-        <img src="https://cdn.discordapp.com/attachments/1222845496666751097/1286917431897489519/2.jpg?ex=66efa6c1&is=66ee5541&hm=ce0f4a90db7e56b5d5c5b59b31cebb8f8517607b3bb16aa692e0a53ded69ce0d&" alt="KillerGram">
+<body style="font-family:'Malgun Gothic',sans-serif;background-color:#f5f6f7;margin:0;padding:0;">
+<div style="max-width:600px;margin:20px auto;background-color:#000000;border:1px solid #e5e5e5;border-radius:8px;padding:40px;">
+    <div style="text-align:center;margin-bottom:30px;">
+        <img src="https://github.com/user-attachments/assets/bbe480e7-bb68-41f4-aaff-1318c0a16edb" alt="KillerGram" style="width:150px;">
     </div>
-    <h1 class="title">이메일 주소 인증</h1>
-    <p class="content">안녕하세요. KillerGram 인증 메일입니다.<br>아래의 인증 번호를 입력하여 이메일 주소 인증을 완료해 주세요.</p>
-    <div class="code" th:text="${verificationCode}"></div>
-    <p class="footer">본 메일은 발신전용이며, 문의에 대한 회신은 처리되지 않습니다.<br>© DSM Gram. All rights reserved.</p>
+    <h1 style="font-size:24px;font-weight:bold;color:#9EFF00;text-align:center;margin-bottom:20px;">이메일 주소 인증</h1>
+    <p style="font-size:16px;color:#767676;line-height:1.6;margin-bottom:30px;">
+        안녕하세요. KillerGram 인증 메일입니다.<br>아래의 인증 번호를 입력하여 이메일 주소 인증을 완료해 주세요.
+    </p>
+    <div style="background-color:#212121;border-radius:4px;padding:15px;text-align:center;font-size:28px;font-weight:bold;color:#9EFF00;letter-spacing:4px;margin-bottom:30px;">
+        <span>{{verificationCode}}</span>
+    </div>
+    <p style="font-size:14px;color:#767676;text-align:center;">
+        본 메일은 발신전용이며, 문의에 대한 회신은 처리되지 않습니다.<br>© DSM Gram. All rights reserved.
+    </p>
 </div>
 </body>
 </html>
