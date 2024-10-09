@@ -43,3 +43,7 @@ jwt:
 email:
   template:
     path: src/main/resources/EmailSendTemplate.html
+
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
