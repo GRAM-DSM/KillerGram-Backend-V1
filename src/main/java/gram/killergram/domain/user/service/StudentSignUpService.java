@@ -14,12 +14,15 @@ import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.user.repository.UserJpaRepository;
 import gram.killergram.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StudentSignUpService {
@@ -45,17 +48,17 @@ public class StudentSignUpService {
             throw UnauthorizedRequestException.EXCEPTION;
         }
 
-        User user = new User(
-                request.getAccountId(),
-                passwordEncoder.encode(request.getPassword()),
-                request.getDeviceToken(),
-                Authority.STUDENT
+        User user = userJpaRepository.save(
+                User.builder()
+                        .accountId(request.getAccountId())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .deviceToken(request.getDeviceToken())
+                        .authority(Authority.STUDENT)
+                        .build()
         );
-        user = userJpaRepository.save(user);
-
 
         Student student = Student.builder()
-                .studentId(user.getUserId())
+                .user(user)
                 .name(request.getName())
                 .gender(request.getGender())
                 .ability(request.getAbility())

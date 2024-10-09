@@ -20,7 +20,7 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: ${DDL:validate}
+      ddl-auto: ${DDL:create}
     show-sql: ${SQL_SHOW:true}
     properties:
       hibernate:
@@ -43,3 +43,7 @@ jwt:
 email:
   template:
     path: src/main/resources/EmailSendTemplate.html
+
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}

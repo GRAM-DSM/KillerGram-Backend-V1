@@ -17,13 +17,14 @@ import java.util.UUID;
 public class Sport {
 
     @Id
-    @Column(name = "sport_id",unique = true, nullable = false)
+    @Column(name = "sport_id", unique = true, nullable = false)
     private UUID sportId;
 
-    @OneToOne(mappedBy = "sport", cascade = CascadeType.ALL)
-    private Student manager_id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "manager_id")
+    private Student managerId;
 
-    @Column(name = "sport_name", nullable = false, columnDefinition = "VACHAR(30)")
+    @Column(name = "sport_name", nullable = false, columnDefinition = "VARCHAR(30)")
     private String sportName;
 
     @Column(name = "is_position", nullable = false)
@@ -43,3 +44,4 @@ public class Sport {
         this.personnel = personnel;
     }
 }
+

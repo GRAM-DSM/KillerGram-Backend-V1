@@ -18,7 +18,7 @@ public class UserController {
     private final PasswordResetService passwordResetService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/student")
+    @PostMapping("/sign-up")
     public void studentSignUp(@RequestBody @Valid StudentSignUpRequest request) {
         studentSignUpService.execute(request);
     }
