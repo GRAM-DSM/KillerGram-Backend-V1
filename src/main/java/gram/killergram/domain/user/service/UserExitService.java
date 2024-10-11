@@ -1,27 +1,24 @@
 package gram.killergram.domain.user.service;
 
 import gram.killergram.domain.user.domain.User;
-import gram.killergram.domain.user.exception.UserAlreadyExistsException;
 import gram.killergram.domain.user.exception.UserNotFoundException;
 import gram.killergram.domain.user.repository.UserJpaRepository;
+import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserExitService {
     private final UserJpaRepository userJpaRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void execute() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = authentication.getName();
+    public void execute(String token) {
+        String userId = jwtTokenProvider.getAuthentication(token).getName();
 
         User user = userJpaRepository.findByAccountId(userId)
                         .orElseThrow(() -> UserNotFoundException.EXCEPTION);

@@ -4,6 +4,7 @@ package gram.killergram.domain.user.presentation;
 import gram.killergram.domain.user.presentation.dto.request.*;
 import gram.killergram.domain.user.service.*;
 import gram.killergram.domain.user.presentation.dto.response.TokenResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/delete-user")
-    public void deleteUser() {
-        userExitService.execute();
+    public void deleteUser(@RequestHeader("Authorization") String token) {
+        userExitService.execute(token);
     }
 }
