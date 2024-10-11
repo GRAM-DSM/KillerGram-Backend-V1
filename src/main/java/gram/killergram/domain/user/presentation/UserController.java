@@ -16,6 +16,7 @@ public class UserController {
     private final StudentSignUpService studentSignUpService;
     private final UserLoginService userLoginService;
     private final PasswordResetService passwordResetService;
+    private final UserExitService userExitService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/sign-up")
@@ -33,5 +34,11 @@ public class UserController {
     @PatchMapping("/reset-password")
     public void resetPassword(@RequestBody @Valid PasswordResetRequest passwordResetRequest) {
         passwordResetService.resetPassword(passwordResetRequest);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/delete-user/{UserId}")
+    public void deleteUser(@PathVariable String UserId) {
+        userExitService.execute(UserId);
     }
 }
