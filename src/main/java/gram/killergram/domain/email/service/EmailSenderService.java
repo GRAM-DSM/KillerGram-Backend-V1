@@ -57,11 +57,8 @@ public class EmailSenderService {
     private String templatePath;
 
     private String getHtmlContent(String verificationCode) throws IOException {
-        // 템플릿 파일 내용을 읽어옵니다.
         String content = Files.readString(Path.of(templatePath), StandardCharsets.UTF_8);
-        System.out.println("템플릿 내용 읽기 전: " + content); // 템플릿 내용을 로그로 출력
-        content = content.replace("{{verificationCode}}", verificationCode);
-        System.out.println("변경된 템플릿 내용: " + content); // 변경 후의 내용을 로그로 출력
-        return content;
+        String html = content.replace("{{verificationCode}}", verificationCode);
+        return html;
     }
 }

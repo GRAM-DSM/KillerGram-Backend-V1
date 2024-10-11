@@ -25,7 +25,6 @@ public class UserLoginService {
     @Transactional
     public TokenResponse execute(UserLoginRequest request) {
 
-        log.info(request.getAccountId());
         User user = userJpaRepository.findByAccountId(request.getAccountId())
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
