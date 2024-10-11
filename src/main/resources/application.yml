@@ -20,11 +20,11 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: ${DDL:create}
-    show-sql: ${SQL_SHOW:true}
+      ddl-auto:false
+    show-sql: true
     properties:
       hibernate:
-        format_sql: ${SQL_FORMAT:true}
+        format_sql: true
     open-in-view: false
 
   jackson:
