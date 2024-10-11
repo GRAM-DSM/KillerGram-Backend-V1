@@ -14,12 +14,10 @@ public class UserExitService {
     private final UserJpaRepository userJpaRepository;
 
     @Transactional
-    public void execute(String UserId) {
-        Optional<User> user = userJpaRepository.findByAccountId(UserId);
-        if (user.isEmpty()) {
-            throw UserNotFoundException.EXCEPTION;
-        }
+    public void execute(String userId) {
+        User user = userJpaRepository.findByAccountId(userId)
+                        .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
-        userJpaRepository.delete(user.get());
+        userJpaRepository.delete(user);
     }
 }

@@ -37,8 +37,8 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/delete-user/{UserId}")
-    public void resetPassword(@PathVariable String UserId) {
+    @DeleteMapping("/delete-user/{UserId}")
+    public void deleteUser(@PathVariable String UserId) {
         userExitService.execute(UserId);
     }
 }
