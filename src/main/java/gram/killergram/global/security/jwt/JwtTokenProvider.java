@@ -12,6 +12,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
@@ -82,6 +84,7 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             throw TokenExpiredException.EXCEPTION;
         } catch (Exception e) {
+            log.info(String.valueOf(e));
             throw TokenInvalidException.EXCEPTION;
         }
     }
