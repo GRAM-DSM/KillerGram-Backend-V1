@@ -19,7 +19,7 @@ public class UserController {
     private final UserExitService userExitService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/sign-up")
+    @PostMapping("/signup")
     public void studentSignUp(@RequestBody @Valid StudentSignUpRequest request) {
         studentSignUpService.execute(request);
     }
@@ -37,8 +37,8 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/delete-user/{UserId}")
-    public void deleteUser(@PathVariable String UserId) {
-        userExitService.execute(UserId);
+    @DeleteMapping("/delete-user")
+    public void deleteUser(@RequestHeader(value = "Authorization") String token) {
+        userExitService.execute(token);
     }
 }

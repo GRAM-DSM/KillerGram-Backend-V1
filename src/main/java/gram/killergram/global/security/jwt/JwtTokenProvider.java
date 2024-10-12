@@ -74,7 +74,8 @@ public class JwtTokenProvider {
 
     private Claims getClaims(String token) {
         try {
-            return Jwts.parser()
+            return Jwts
+                    .parser()
                     .setSigningKey(jwtProperties.getSecret())
                     .build()
                     .parseClaimsJws(token)
@@ -88,10 +89,9 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(jwtProperties.getHeader());
-
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith(jwtProperties.getPrefix())
-        && bearerToken.length() > jwtProperties.getPrefix().length() + 1) {
-            return bearerToken.substring(7);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(jwtProperties.getPrefix())
+                && bearerToken.length() > jwtProperties.getPrefix().length() + 1) {
+            return bearerToken.substring(7).trim();
         }
         return null;
     }
