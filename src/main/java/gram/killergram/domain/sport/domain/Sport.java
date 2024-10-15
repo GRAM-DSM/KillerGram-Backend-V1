@@ -21,7 +21,7 @@ public class Sport {
     @Column(name = "sport_id", unique = true, nullable = false)
     private UUID sportId;
 
-    @JoinColumn(name = "manager_email")
+    @Column(name = "manager_email")
     private String managerEmail;
 
     @Enumerated(EnumType.STRING)
