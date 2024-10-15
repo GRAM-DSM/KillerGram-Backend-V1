@@ -33,9 +33,6 @@ public class Sport {
     @Column(name = "personnel", nullable = false)
     private Integer personnel;
 
-    @OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
-    private List<SportTime> sportTime = new ArrayList<>();
-
     @Builder
     public Sport(String sportName, boolean isPosition, Integer personnel) {
         this.sportId = UUID.randomUUID();
