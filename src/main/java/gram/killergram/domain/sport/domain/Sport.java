@@ -21,9 +21,8 @@ public class Sport {
     @Column(name = "sport_id", unique = true, nullable = false)
     private UUID sportId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "manager_id")
-    private Student managerId;
+    @JoinColumn(name = "manager_email")
+    private String managerEmail;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sport_name", nullable = false, columnDefinition = "VARCHAR(30)")
@@ -36,8 +35,8 @@ public class Sport {
     private Integer personnel;
 
     @Builder
-    public Sport(Student managerId, SportName sportName, boolean isPosition, Integer personnel) {
-        this.managerId = managerId;
+    public Sport(String managerEmail, SportName sportName, boolean isPosition, Integer personnel) {
+        this.managerEmail = managerEmail;
         this.sportId = UUID.randomUUID();
         this.sportName = sportName;
         this.isPosition = isPosition;

@@ -36,9 +36,11 @@ public class Vote {
     @JoinColumn(name = "sport_id", nullable = false)
     private Sport sportId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "day", nullable = false)
     private Day day;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "time_slot", nullable = false)
     private TimeSlot timeSlot;
 

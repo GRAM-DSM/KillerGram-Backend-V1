@@ -23,12 +23,12 @@ public class CreateVoteService {
     private final SportCrudRepository sportCrudRepository;
 
     @Transactional
-    public void execute(Student manager, SportName sportName, Integer personnel, Boolean isPosition) {
+    public void execute(String managerEmail, SportName sportName, Integer personnel, Boolean isPosition) {
         Sport sport = Sport.builder()
                 .sportName(sportName)
                 .isPosition(isPosition)
                 .personnel(personnel)
-                .managerId(manager)
+                .managerEmail(managerEmail)
                 .build();
         sportCrudRepository.save(sport);
 
