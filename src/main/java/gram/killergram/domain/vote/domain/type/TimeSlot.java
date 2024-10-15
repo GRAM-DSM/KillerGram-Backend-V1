@@ -1,7 +1,7 @@
 package gram.killergram.domain.vote.domain.type;
 
 public enum TimeSlot {
-    LAUNCH_TIME("점심시간"),
+    LUNCH_TIME("점심시간"),
     DINNER_TIME("저녁시간");
 
     private final String value;
