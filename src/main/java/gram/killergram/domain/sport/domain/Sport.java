@@ -1,5 +1,6 @@
 package gram.killergram.domain.sport.domain;
 
+import gram.killergram.domain.sport.domain.type.SportName;
 import gram.killergram.domain.user.domain.Student;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -24,8 +25,9 @@ public class Sport {
     @JoinColumn(name = "manager_id")
     private Student managerId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "sport_name", nullable = false, columnDefinition = "VARCHAR(30)")
-    private String sportName;
+    private SportName sportName;
 
     @Column(name = "is_position", nullable = false)
     private boolean isPosition;
@@ -34,7 +36,8 @@ public class Sport {
     private Integer personnel;
 
     @Builder
-    public Sport(String sportName, boolean isPosition, Integer personnel) {
+    public Sport(Student managerId, SportName sportName, boolean isPosition, Integer personnel) {
+        this.managerId = managerId;
         this.sportId = UUID.randomUUID();
         this.sportName = sportName;
         this.isPosition = isPosition;
