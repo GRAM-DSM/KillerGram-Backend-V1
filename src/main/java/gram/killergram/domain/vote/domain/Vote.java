@@ -36,19 +36,17 @@ public class Vote {
     @JoinColumn(name = "sport_id", nullable = false)
     private Sport sportId;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "day", nullable = false)
-    private Day day;
+    private String day;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "time_slot", nullable = false)
-    private TimeSlot timeSlot;
+    private String timeSlot;
 
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
     private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder
-    public Vote(LocalDate voteDate, Integer participate, boolean isEnd, Sport sportId, Day day, TimeSlot timeSlot) {
+    public Vote(LocalDate voteDate, Integer participate, boolean isEnd, Sport sportId, String day, String timeSlot) {
         this.sportId = sportId;
         this.voteId = UUID.randomUUID();
         this.voteDate = voteDate;
@@ -56,5 +54,13 @@ public class Vote {
         this.isEnd = isEnd;
         this.day = day;
         this.timeSlot = timeSlot;
+    }
+
+    public Day getDay() {
+        return Day.fromValue(day);
+    }
+
+    public TimeSlot getTimeSlot() {
+        return TimeSlot.fromValue(timeSlot);
     }
 }

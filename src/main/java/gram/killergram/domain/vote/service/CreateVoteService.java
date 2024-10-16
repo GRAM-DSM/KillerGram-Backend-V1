@@ -2,7 +2,6 @@ package gram.killergram.domain.vote.service;
 
 import gram.killergram.domain.sport.domain.Sport;
 import gram.killergram.domain.sport.domain.type.SportName;
-import gram.killergram.domain.user.domain.Student;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.type.Day;
 import gram.killergram.domain.vote.domain.type.TimeSlot;
@@ -25,7 +24,7 @@ public class CreateVoteService {
     @Transactional
     public void execute(String managerEmail, SportName sportName, Integer personnel, Boolean isPosition) {
         Sport sport = Sport.builder()
-                .sportName(sportName)
+                .sportName(sportName.getValue())
                 .isPosition(isPosition)
                 .personnel(personnel)
                 .managerEmail(managerEmail)
@@ -36,15 +35,15 @@ public class CreateVoteService {
         LocalTime currentTime = LocalTime.now();
 
         TimeSlot timeSlot = currentTime.isBefore(LocalTime.of(13, 30))
-                ? TimeSlot.LAUNCH_TIME
+                ? TimeSlot.LUNCH_TIME
                 : TimeSlot.DINNER_TIME;
 
-        Day day = Day.valueOf(currentDate.getDayOfWeek().name());
+        Day day = (Day.valueOf(currentDate.getDayOfWeek().name()));
 
         Vote vote = Vote.builder()
                 .voteDate(currentDate)
-                .day(day)
-                .timeSlot(timeSlot)
+                .day(day.getName())
+                .timeSlot(timeSlot.getValue())
                 .isEnd(false)
                 .participate(0)
                 .sportId(sport)

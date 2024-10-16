@@ -1,5 +1,13 @@
 package gram.killergram.domain.sport.domain.type;
 
+import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Getter
 public enum SportName {
     SOCCER("축구"),
     BASKETBALL("농구"),
@@ -16,7 +24,14 @@ public enum SportName {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
+    private static final Map<String, SportName> VALUE_MAP = Arrays.stream(values())
+            .collect(Collectors.toMap(SportName::getValue, Function.identity()));
+
+    public static SportName fromValue(String name) {
+        SportName sport = VALUE_MAP.get(name);
+        if (sport == null) {
+            throw new IllegalArgumentException("Invalid sport name: " + name);
+        }
+        return sport;
     }
 }
