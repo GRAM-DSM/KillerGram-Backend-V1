@@ -21,6 +21,9 @@ public class VoteUser {
     @Column(name = "is_attend", nullable = false)
     private boolean isAttend;
 
+    @Column(name = "vote_position", nullable = true)
+    private Integer votePosition;
+
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;

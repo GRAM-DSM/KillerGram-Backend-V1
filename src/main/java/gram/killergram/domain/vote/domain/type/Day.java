@@ -1,4 +1,4 @@
-package gram.killergram.domain.sport.domain.type;
+package gram.killergram.domain.vote.domain.type;
 
 public enum Day {
     MONDAY,
@@ -7,6 +7,5 @@ public enum Day {
     THURSDAY,
     FRIDAY,
     SATURDAY,
-    SUNDAY,
-    EVERYDAY;
+    SUNDAY
 }
