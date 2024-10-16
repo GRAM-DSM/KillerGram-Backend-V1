@@ -2,6 +2,9 @@ package gram.killergram.domain.vote.domain.type;
 
 import lombok.Getter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 public enum Day {
     MONDAY("월요일"),
@@ -16,12 +19,19 @@ public enum Day {
         this.name = name;
     }
 
-    public static Day fromValue(String name) {
+    private static final Map<String, Day> NAME_TO_DAY_MAP = new HashMap<>();
+
+    static {
         for (Day day : Day.values()) {
-            if (day.getName() == name) {
-                return day;
-            }
+            NAME_TO_DAY_MAP.put(day.getName(), day);
         }
-        throw new IllegalArgumentException("Invalid day: " + name);
+    }
+
+    public static Day fromValue(String name) {
+        Day day = NAME_TO_DAY_MAP.get(name);
+        if (day != null) {
+            return day;
+        }
+        throw new IllegalArgumentException("In valid day: " + name);
     }
 }

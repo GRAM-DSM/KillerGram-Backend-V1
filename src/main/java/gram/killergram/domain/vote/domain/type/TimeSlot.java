@@ -17,7 +17,7 @@ public enum TimeSlot {
         return switch (value) {
             case "점심시간" -> LUNCH_TIME;
             case "저녁시간" -> DINNER_TIME;
-            default -> throw new IllegalArgumentException("Invalid day: " + value);
+            default -> throw new IllegalArgumentException("Invalid time_slot: " + value);
         };
     }
 }

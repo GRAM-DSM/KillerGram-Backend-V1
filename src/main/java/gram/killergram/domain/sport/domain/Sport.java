@@ -40,7 +40,7 @@ public class Sport {
     }
 
     public SportName getSportName() {
-        return SportName.valueOf(sportName);
+        return SportName.fromValue(sportName);
     }
 }
 
