@@ -1,5 +1,8 @@
 package gram.killergram.domain.vote.domain.type;
 
+import lombok.Getter;
+
+@Getter
 public enum Day {
     MONDAY("월요일"),
     TUESDAY("화요일"),
@@ -11,10 +14,6 @@ public enum Day {
 
     Day(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public static Day fromValue(String name) {
