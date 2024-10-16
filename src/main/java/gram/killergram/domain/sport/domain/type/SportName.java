@@ -19,4 +19,13 @@ public enum SportName {
     public String getValue() {
         return value;
     }
+
+    public static SportName fromValue(String name) {
+        for (SportName value : SportName.values()) {
+            if (value.getValue() == name) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException("Invalid day: " + name);
+    }
 }

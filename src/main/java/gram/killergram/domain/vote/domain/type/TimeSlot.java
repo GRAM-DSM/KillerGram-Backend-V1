@@ -13,4 +13,13 @@ public enum TimeSlot {
     public String getValue() {
         return value;
     }
+
+    public static TimeSlot fromValue(String value) {
+        for (TimeSlot timeSlot : TimeSlot.values()) {
+            if (timeSlot.getValue() == value) {
+                return timeSlot;
+            }
+        }
+        throw new IllegalArgumentException("Invalid day: " + value);
+    }
 }
