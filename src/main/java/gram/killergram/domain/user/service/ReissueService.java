@@ -20,7 +20,7 @@ public class ReissueService {
     @Transactional
     public TokenResponse reissue(RefreshTokenRequest request) {
 
-        RefreshToken refreshToken = refreshTokenJpaRepository.findById(request.getRefreshToken())
+        RefreshToken refreshToken = refreshTokenJpaRepository.findByToken(request.getRefreshToken())
                 .orElseThrow(() -> RefreshTokenException.EXCEPTION);
 
         return jwtTokenProvider.receiveToken(refreshToken.getAccountId());
