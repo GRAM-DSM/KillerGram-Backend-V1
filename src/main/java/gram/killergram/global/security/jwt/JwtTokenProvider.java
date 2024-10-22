@@ -1,6 +1,9 @@
 package gram.killergram.global.security.jwt;
 
 import gram.killergram.domain.user.domain.RefreshToken;
+import gram.killergram.domain.user.domain.User;
+import gram.killergram.domain.user.exception.UserNotFoundException;
+import gram.killergram.domain.user.presentation.dto.response.TokenResponse;
 import gram.killergram.domain.user.repository.RefreshTokenJpaRepository;
 import gram.killergram.domain.user.repository.UserJpaRepository;
 import gram.killergram.global.exception.TokenExpiredException;
@@ -94,5 +97,19 @@ public class JwtTokenProvider {
             return bearerToken.substring(7).trim();
         }
         return null;
+    }
+
+    public TokenResponse receiveToken(String accountId) {
+
+        Date now = new Date();
+
+        User user = userJpaRepository.findByAccountId(accountId)
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
+
+        return TokenResponse
+                .builder()
+                .accessToken(createAccessToken(accountId))
+                .refreshToken(createRefreshToken(accountId))
+                .build();
     }
 }
