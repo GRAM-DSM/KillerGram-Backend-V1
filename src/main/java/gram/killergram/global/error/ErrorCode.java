@@ -16,7 +16,7 @@ public enum ErrorCode {
 
     UNAUTHORIZED_REQUEST(403, "Unauthorized Request"),
 
-
+    TOKEN_NOT_FOUND(404, "RefreshToken Not Found"),
     EMAIL_VERIFICATION_NOT_FOUND(404, "Email Verification Not Found"),
     USER_NOT_FOUND(404, "User Not Found"),
 

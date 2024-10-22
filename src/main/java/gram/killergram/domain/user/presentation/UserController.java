@@ -17,8 +17,9 @@ public class UserController {
     private final UserLoginService userLoginService;
     private final PasswordResetService passwordResetService;
     private final UserExitService userExitService;
+    private final ReissueService reissueService;
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/signup")
     public void studentSignUp(@RequestBody @Valid StudentSignUpRequest request) {
         studentSignUpService.execute(request);
@@ -40,5 +41,11 @@ public class UserController {
     @DeleteMapping("/delete-user")
     public void deleteUser(@RequestHeader(value = "Authorization") String token) {
         userExitService.execute(token);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/token")
+    public TokenResponse token(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
+        return reissueService.reissue(refreshTokenRequest);
     }
 }

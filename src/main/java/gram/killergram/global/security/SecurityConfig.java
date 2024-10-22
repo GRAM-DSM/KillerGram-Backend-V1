@@ -34,7 +34,8 @@ public class SecurityConfig {
                                 "/users/signup",
                                 "/users/reset-password",
                                 "/users/send-verification",
-                                "/users/verify-email").permitAll()
+                                "/users/verify-email",
+                                "/users/token").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/users/delete-user").authenticated()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
