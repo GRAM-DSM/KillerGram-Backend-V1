@@ -19,6 +19,6 @@ public class UserFacade {
     }
 
     public UUID getUserId(String accountId) {
-        return userJpaRepository.findByAccountId(accountId).get().getUserId();
+        return getByUser(accountId).getUserId();
     }
 }
