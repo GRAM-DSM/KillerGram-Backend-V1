@@ -12,6 +12,9 @@ public class WebSocketConfig {
     @Value("${socket.port}")
     private int port;
 
+    @Value("{socket.host}")
+    private String host;
+
     @Bean
     public SocketIOServer socketIOServer() {
 
@@ -20,7 +23,7 @@ public class WebSocketConfig {
 
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
 
-        config.setHostname("localhost");
+        config.setHostname(host);
         config.setPort(port);
 
         return new SocketIOServer(config);

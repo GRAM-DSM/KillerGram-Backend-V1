@@ -50,5 +50,6 @@ redis:
   port: ${REDIS_PORT}
 
 socket:
+  host: ${SOCKET_HOST}
   port: ${SOCKET_PORT}
 
