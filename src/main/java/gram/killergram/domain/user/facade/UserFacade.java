@@ -6,6 +6,8 @@ import gram.killergram.domain.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Component
 public class UserFacade {
@@ -14,5 +16,9 @@ public class UserFacade {
 
     public User getByUser(String accountId) {
         return userJpaRepository.findByAccountId(accountId).orElseThrow(() -> UserNotFoundException.EXCEPTION);
+    }
+
+    public UUID getUserId(String accountId) {
+        return getByUser(accountId).getUserId();
     }
 }

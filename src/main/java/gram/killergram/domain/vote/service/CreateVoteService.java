@@ -41,6 +41,7 @@ public class CreateVoteService {
         Day day = (Day.valueOf(currentDate.getDayOfWeek().name()));
 
         Vote vote = Vote.builder()
+
                 .voteDate(currentDate)
                 .day(day.getName())
                 .timeSlot(timeSlot.getValue())

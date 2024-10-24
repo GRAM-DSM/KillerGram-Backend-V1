@@ -16,6 +16,8 @@ public enum ErrorCode {
 
     UNAUTHORIZED_REQUEST(403, "Unauthorized Request"),
 
+    STUDENT_NOT_FOUND(404, "Student Not Found"),
+    VOTE_NOT_FOUND(404, "Vote not found"),
     TOKEN_NOT_FOUND(404, "RefreshToken Not Found"),
     EMAIL_VERIFICATION_NOT_FOUND(404, "Email Verification Not Found"),
     USER_NOT_FOUND(404, "User Not Found"),
