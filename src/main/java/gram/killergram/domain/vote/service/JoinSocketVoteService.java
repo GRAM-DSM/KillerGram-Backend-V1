@@ -19,10 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JoinSocketVoteService {
@@ -63,8 +61,7 @@ public class JoinSocketVoteService {
 
         List<VoteUser> voteUser = vote.getVoteUser() != null ? vote.getVoteUser() : Collections.emptyList();
 
-        boolean isUserInVote = voteUser.stream()
-                .anyMatch(vu -> vu.getStudent().equals(student));
+        boolean isUserInVote = voteUser.contains(student);
 
         return JoinSocketVoteResponse.builder()
                 .sportName(vote.getSportId().getSportName())
