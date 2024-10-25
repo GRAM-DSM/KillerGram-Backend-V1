@@ -11,11 +11,13 @@ import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteRespo
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JoinSocketVoteService {
@@ -35,6 +37,7 @@ public class JoinSocketVoteService {
 
         if (token.startsWith("Bearer ")) token = token.substring(7).trim();
         String userAccountId = jwtTokenProvider.getAuthentication(token).getName();
+        log.info(userAccountId);
 
         if(managerEmail.equals(userAccountId)) isAdmin = true;
 
@@ -46,6 +49,8 @@ public class JoinSocketVoteService {
 
         boolean isUserInVote = voteUser.stream()
                 .anyMatch(vu -> vu.getStudent().equals(student));
+
+
 
         return JoinSocketVoteResponse.builder()
                 .sportName(vote.getSportId().getSportName())

@@ -1,5 +1,6 @@
 package gram.killergram.global.error;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,8 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
-
-    EMAIL_CODE_MISMATCH(401, "Email code mismatch"),
     EXPIRED_TOKEN(401, "Expired Token"),
     PASSWORD_MISMATCH(401, "Password Mismatch"),
     VERIFICATION_CODE_MISMATCH(401, "Verification code mismatch"),
