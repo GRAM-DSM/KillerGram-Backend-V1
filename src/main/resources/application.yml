@@ -18,8 +18,8 @@ spring:
 
   jpa:
     database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
       ddl-auto: ${DDL:none}
     show-sql: ${SQL_SHOW:true}
     properties:
@@ -49,3 +49,6 @@ redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
 
+socket:
+  host: ${SOCKET_HOST}
+  port: ${SOCKET_PORT}

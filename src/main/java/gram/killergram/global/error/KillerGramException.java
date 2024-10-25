@@ -1,12 +1,10 @@
 package gram.killergram.global.error;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class KillerGramException extends RuntimeException {
-
     private final ErrorCode errorCode;
-
 }
