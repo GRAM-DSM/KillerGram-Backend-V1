@@ -4,7 +4,6 @@ import gram.killergram.domain.sport.domain.type.SportName;
 import gram.killergram.domain.user.domain.type.Ability;
 import gram.killergram.domain.vote.domain.VoteUser;
 import gram.killergram.domain.vote.domain.type.TimeSlot;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

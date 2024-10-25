@@ -13,7 +13,9 @@ import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +29,7 @@ public class JoinSocketVoteService {
     private final StudentJpaRepository studentJpaRepository;
     private final UserFacade userFacade;
 
+    @Transactional
     public JoinSocketVoteResponse joinSocketVote(String token , String voteId) {
         Vote vote = voteCrudRepository.findById(UUID.fromString(voteId))
                 .orElseThrow(() -> VoteNotFoundException.EXCEPTION);
@@ -34,10 +37,7 @@ public class JoinSocketVoteService {
         boolean isAdmin = false;
 
         String managerEmail = vote.getSportId().getManagerEmail();
-
-        if (token.startsWith("Bearer ")) token = token.substring(7).trim();
         String userAccountId = jwtTokenProvider.getAuthentication(token).getName();
-        log.info(userAccountId);
 
         if(managerEmail.equals(userAccountId)) isAdmin = true;
 
@@ -45,17 +45,15 @@ public class JoinSocketVoteService {
         Student student = studentJpaRepository.findById(userId)
                 .orElseThrow(() -> StudentNotFoundException.EXCEPTION);
 
-        List<VoteUser> voteUser = vote.getVoteUser();
+        List<VoteUser> voteUser = vote.getVoteUser() != null ? vote.getVoteUser() : Collections.emptyList();
 
         boolean isUserInVote = voteUser.stream()
                 .anyMatch(vu -> vu.getStudent().equals(student));
 
-
-
         return JoinSocketVoteResponse.builder()
                 .sportName(vote.getSportId().getSportName())
                 .ability(student.getAbility())
-                .voteStudents(vote.getVoteUser())
+                .voteStudents(voteUser)
                 .timeSlot(vote.getTimeSlot())
                 .participate(vote.getParticipate())
                 .isJoinMe(isUserInVote)

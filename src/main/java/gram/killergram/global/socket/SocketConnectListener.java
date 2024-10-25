@@ -24,6 +24,7 @@ public class SocketConnectListener {
                 sendErrorEvent(client, "JWT is missing or invalid.");
                 client.disconnect();
             }
+            client.set("token", token);
         } else {
             sendErrorEvent(client, "JWT is missing or invalid.");
             client.disconnect();
