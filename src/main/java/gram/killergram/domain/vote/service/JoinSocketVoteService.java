@@ -2,12 +2,15 @@ package gram.killergram.domain.vote.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import gram.killergram.domain.user.domain.Student;
+import gram.killergram.domain.user.exception.StudentNotFoundException;
 import gram.killergram.domain.user.facade.UserFacade;
 import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
+import gram.killergram.domain.vote.exception.VoteNotFoundException;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
+import gram.killergram.global.exception.TokenExpiredException;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,33 +34,46 @@ public class JoinSocketVoteService {
 
     @Transactional
     public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, String token , String voteId) {
-        Optional<Vote> vote = voteCrudRepository.findById(UUID.fromString(voteId));
-        if(vote.isEmpty()) client.sendEvent("404", "Vote Not Found");
+        Vote vote = voteCrudRepository.findById(UUID.fromString(voteId))
+                .orElseThrow(() -> {
+                    client.sendEvent("error", VoteNotFoundException.EXCEPTION);
+                    return VoteNotFoundException.EXCEPTION;
+                });
+
 
         boolean isAdmin = false;
 
-        String managerEmail = vote.get().getSportId().getManagerEmail();
-        String userAccountId = jwtTokenProvider.getAuthentication(token).getName();
+        String managerEmail = vote.getSportId().getManagerEmail();
+
+        if(token == null) throw TokenExpiredException.EXCEPTION;
+
+        String userAccountId;
+        if(jwtTokenProvider.validateToken(token)) {
+            userAccountId = jwtTokenProvider.getAuthentication(token).getName();
+        } else throw TokenExpiredException.EXCEPTION;
 
         if(managerEmail.equals(userAccountId)) isAdmin = true;
 
         UUID userId =  userFacade.getUserId(userAccountId);
-        Optional<Student> student = studentJpaRepository.findById(userId);
-        if(student.isEmpty()) client.sendEvent("404", "Student Not Found");
+        Student student = studentJpaRepository.findById(userId)
+                .orElseThrow(() -> {
+                    client.sendEvent("error", StudentNotFoundException.EXCEPTION);
+                    return StudentNotFoundException.EXCEPTION;
+                });
 
-        List<VoteUser> voteUser = vote.get().getVoteUser() != null ? vote.get().getVoteUser() : Collections.emptyList();
+        List<VoteUser> voteUser = vote.getVoteUser() != null ? vote.getVoteUser() : Collections.emptyList();
 
         boolean isUserInVote = voteUser.stream()
                 .anyMatch(vu -> vu.getStudent().equals(student));
 
         return JoinSocketVoteResponse.builder()
-                .sportName(vote.get().getSportId().getSportName())
-                .ability(student.get().getAbility())
+                .sportName(vote.getSportId().getSportName())
+                .ability(student.getAbility())
                 .voteStudents(voteUser)
-                .timeSlot(vote.get().getTimeSlot())
-                .participate(vote.get().getParticipate())
+                .timeSlot(vote.getTimeSlot())
+                .participate(vote.getParticipate())
                 .isJoinMe(isUserInVote)
-                .isEnd(vote.get().isEnd())
+                .isEnd(vote.isEnd())
                 .isAdmin(isAdmin)
                 .build();
     }

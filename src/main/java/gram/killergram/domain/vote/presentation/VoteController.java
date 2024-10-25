@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.annotation.OnEvent;
 import com.fasterxml.jackson.databind.JsonNode;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.service.JoinSocketVoteService;
+import gram.killergram.global.exception.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +19,9 @@ public class VoteController {
     public void joinSocketVote(SocketIOClient client, JsonNode node) {
         String token = client.get("token");
         if(token == null) {
-            client.sendEvent("Error: ", "token is null");
+            client.sendEvent("error", TokenExpiredException.EXCEPTION);
             client.disconnect();
+            return;
         }
         String roomId = node.get("room_id").asText();
         JoinSocketVoteResponse response = joinSocketVoteService.joinSocketVote(client, token ,roomId);
