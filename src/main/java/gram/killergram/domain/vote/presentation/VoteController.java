@@ -17,8 +17,12 @@ public class VoteController {
     @OnEvent("join")
     public void joinSocketVote(SocketIOClient client, JsonNode node) {
         String token = client.get("token");
+        if(token == null) {
+            client.sendEvent("Error: ", "token is null");
+            client.disconnect();
+        }
         String roomId = node.get("room_id").asText();
-        JoinSocketVoteResponse response = joinSocketVoteService.joinSocketVote(token ,roomId);
+        JoinSocketVoteResponse response = joinSocketVoteService.joinSocketVote(client, token ,roomId);
         client.sendEvent("joinVote", response);
     }
 }

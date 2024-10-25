@@ -1,12 +1,11 @@
 package gram.killergram.domain.vote.service;
 
+import com.corundumstudio.socketio.SocketIOClient;
 import gram.killergram.domain.user.domain.Student;
-import gram.killergram.domain.user.exception.StudentNotFoundException;
 import gram.killergram.domain.user.facade.UserFacade;
 import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
-import gram.killergram.domain.vote.exception.VoteNotFoundException;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -30,34 +30,34 @@ public class JoinSocketVoteService {
     private final UserFacade userFacade;
 
     @Transactional
-    public JoinSocketVoteResponse joinSocketVote(String token , String voteId) {
-        Vote vote = voteCrudRepository.findById(UUID.fromString(voteId))
-                .orElseThrow(() -> VoteNotFoundException.EXCEPTION);
+    public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, String token , String voteId) {
+        Optional<Vote> vote = voteCrudRepository.findById(UUID.fromString(voteId));
+        if(vote.isEmpty()) client.sendEvent("404", "Vote Not Found");
 
         boolean isAdmin = false;
 
-        String managerEmail = vote.getSportId().getManagerEmail();
+        String managerEmail = vote.get().getSportId().getManagerEmail();
         String userAccountId = jwtTokenProvider.getAuthentication(token).getName();
 
         if(managerEmail.equals(userAccountId)) isAdmin = true;
 
         UUID userId =  userFacade.getUserId(userAccountId);
-        Student student = studentJpaRepository.findById(userId)
-                .orElseThrow(() -> StudentNotFoundException.EXCEPTION);
+        Optional<Student> student = studentJpaRepository.findById(userId);
+        if(student.isEmpty()) client.sendEvent("404", "Student Not Found");
 
-        List<VoteUser> voteUser = vote.getVoteUser() != null ? vote.getVoteUser() : Collections.emptyList();
+        List<VoteUser> voteUser = vote.get().getVoteUser() != null ? vote.get().getVoteUser() : Collections.emptyList();
 
         boolean isUserInVote = voteUser.stream()
                 .anyMatch(vu -> vu.getStudent().equals(student));
 
         return JoinSocketVoteResponse.builder()
-                .sportName(vote.getSportId().getSportName())
-                .ability(student.getAbility())
+                .sportName(vote.get().getSportId().getSportName())
+                .ability(student.get().getAbility())
                 .voteStudents(voteUser)
-                .timeSlot(vote.getTimeSlot())
-                .participate(vote.getParticipate())
+                .timeSlot(vote.get().getTimeSlot())
+                .participate(vote.get().getParticipate())
                 .isJoinMe(isUserInVote)
-                .isEnd(vote.isEnd())
+                .isEnd(vote.get().isEnd())
                 .isAdmin(isAdmin)
                 .build();
     }
