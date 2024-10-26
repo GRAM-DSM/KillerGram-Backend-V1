@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,7 +43,7 @@ public class Vote {
     private String timeSlot;
 
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
-    private List<VoteUser> voteUser = new ArrayList<>();
+    private LinkedHashSet<VoteUser> voteUser = new LinkedHashSet<>();
 
     @Builder
     public Vote(LocalDate voteDate, Integer participate, boolean isEnd, Sport sportId, String day, String timeSlot) {
@@ -62,5 +62,13 @@ public class Vote {
 
     public TimeSlot getTimeSlot() {
         return TimeSlot.fromValue(timeSlot);
+    }
+
+    public void increaseParticipate() {
+        this.participate++;
+    }
+
+    public void addVoteUser(VoteUser voteUser) {
+        this.voteUser.add(voteUser);
     }
 }

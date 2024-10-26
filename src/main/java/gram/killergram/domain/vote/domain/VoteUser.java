@@ -33,8 +33,11 @@ public class VoteUser {
     private Vote vote;
 
     @Builder
-    public VoteUser(boolean isAttend) {
+    public VoteUser(boolean isAttend, Integer votePosition, Student student, Vote vote) {
         this.voteStudent = UUID.randomUUID();
+        this.votePosition = votePosition;
+        this.student = student;
+        this.vote = vote;
         this.isAttend = isAttend;
     }
 }

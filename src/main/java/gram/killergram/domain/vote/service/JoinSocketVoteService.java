@@ -13,11 +13,11 @@ import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.global.exception.TokenExpiredException;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,7 +43,10 @@ public class JoinSocketVoteService {
 
         String managerEmail = vote.getSportId().getManagerEmail();
 
-        if(token == null) throw TokenExpiredException.EXCEPTION;
+        if(token == null) {
+            client.sendEvent("error", TokenExpiredException.EXCEPTION);
+            throw TokenExpiredException.EXCEPTION;
+        }
 
         String userAccountId;
         if(jwtTokenProvider.validateToken(token)) {
@@ -59,7 +62,7 @@ public class JoinSocketVoteService {
                     return StudentNotFoundException.EXCEPTION;
                 });
 
-        List<VoteUser> voteUser = vote.getVoteUser() != null ? vote.getVoteUser() : Collections.emptyList();
+        LinkedHashSet<VoteUser> voteUser = vote.getVoteUser();
 
         boolean isUserInVote = voteUser.contains(student);
 

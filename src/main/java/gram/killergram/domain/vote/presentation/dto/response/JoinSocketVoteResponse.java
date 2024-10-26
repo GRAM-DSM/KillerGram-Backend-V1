@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Builder
@@ -21,7 +22,7 @@ public class JoinSocketVoteResponse {
 
     private Ability ability;
 
-    private List<VoteUser> voteStudents;
+    private LinkedHashSet<VoteUser> voteStudents;
 
     private TimeSlot timeSlot;
 
