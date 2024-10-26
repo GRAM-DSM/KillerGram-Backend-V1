@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "vote")
@@ -43,7 +43,7 @@ public class Vote {
     private String timeSlot;
 
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
-    private LinkedHashSet<VoteUser> voteUser = new LinkedHashSet<>();
+    private Set<VoteUser> voteUser;
 
     @Builder
     public Vote(LocalDate voteDate, Integer participate, boolean isEnd, Sport sportId, String day, String timeSlot) {
@@ -70,5 +70,9 @@ public class Vote {
 
     public void addVoteUser(VoteUser voteUser) {
         this.voteUser.add(voteUser);
+    }
+
+    public Set<VoteUser> getVoteUser() {
+        return new LinkedHashSet<>(voteUser);
     }
 }

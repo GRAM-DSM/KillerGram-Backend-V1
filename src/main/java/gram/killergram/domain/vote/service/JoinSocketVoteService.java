@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -61,7 +62,7 @@ public class JoinSocketVoteService {
                     return StudentNotFoundException.EXCEPTION;
                 });
 
-        LinkedHashSet<VoteUser> voteUser = vote.getVoteUser();
+        Set<VoteUser> voteUser = vote.getVoteUser();
 
         boolean isUserInVote = voteUser.contains(student);
 

@@ -85,10 +85,6 @@ public class RegisterVoteService {
             vote.increaseParticipate();
             voteCrudRepository.save(vote);
 
-            JoinSocketVoteResponse joinResponse = joinSocketVoteService.joinSocketVote(client,
-                    token, registerVoteRequest.getVoteId());
-            client.getNamespace().getBroadcastOperations().sendEvent("joinVote", joinResponse);
-
         } else {
             if(registerVoteRequest.getPosition() != null) {
                 client.sendEvent("error", PositionNotFoundException.EXCEPTION);
@@ -105,10 +101,6 @@ public class RegisterVoteService {
             vote.addVoteUser(voteUser);
             vote.increaseParticipate();
             voteCrudRepository.save(vote);
-
-            JoinSocketVoteResponse joinResponse = joinSocketVoteService.joinSocketVote(client,
-                    token, registerVoteRequest.getVoteId());
-            client.getNamespace().getBroadcastOperations().sendEvent("joinVote", joinResponse);
         }
     }
 }
