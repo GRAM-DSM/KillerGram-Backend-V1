@@ -8,6 +8,7 @@ import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
 import gram.killergram.domain.vote.exception.VoteNotFoundException;
+import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.global.exception.TokenExpiredException;
@@ -16,9 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,8 +30,8 @@ public class JoinSocketVoteService {
     private final UserFacade userFacade;
 
     @Transactional
-    public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, String token , String voteId) {
-        Vote vote = voteCrudRepository.findById(UUID.fromString(voteId))
+    public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, JoinVoteRequest joinVoteRequest, String token) {
+        Vote vote = voteCrudRepository.findById(joinVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     client.sendEvent("error", VoteNotFoundException.EXCEPTION);
                     return VoteNotFoundException.EXCEPTION;

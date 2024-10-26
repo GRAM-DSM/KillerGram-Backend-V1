@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gram.killergram.domain.vote.presentation.VoteController;
+import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.request.RegisterVoteRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -21,8 +22,9 @@ public class SocketRunner implements CommandLineRunner {
     @Override
     public void run(String[] args) {
         socketIOServer.addConnectListener(socketConnectListener::onConnect);
-        socketIOServer.addEventListener("join", JsonNode.class, (client, data, ackSender) -> {
-            voteController.joinSocketVote(client, data);
+        socketIOServer.addEventListener("join", JoinVoteRequest.class,
+                (client, joinVoteRequest, ackSender) -> {
+            voteController.joinSocketVote(client, joinVoteRequest);
         });
         socketIOServer.addEventListener("register", RegisterVoteRequest.class,
                 (client, registerVoteRequest, ackSender) -> {

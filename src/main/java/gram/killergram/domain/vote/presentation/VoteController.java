@@ -3,6 +3,7 @@ package gram.killergram.domain.vote.presentation;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.fasterxml.jackson.databind.JsonNode;
+import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.request.RegisterVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.service.JoinSocketVoteService;
@@ -19,15 +20,15 @@ public class VoteController {
     private final RegisterVoteService registerVoteService;
 
     @OnEvent("join")
-    public void joinSocketVote(SocketIOClient client, JsonNode node) {
+    public void joinSocketVote(SocketIOClient client, JoinVoteRequest joinVoteRequest) {
         String token = client.get("token");
         if(token == null) {
             client.sendEvent("error", TokenExpiredException.EXCEPTION);
             client.disconnect();
             return;
         }
-        String roomId = node.get("room_id").asText();
-        JoinSocketVoteResponse response = joinSocketVoteService.joinSocketVote(client, token ,roomId);
+
+        JoinSocketVoteResponse response = joinSocketVoteService.joinSocketVote(client, joinVoteRequest, token);
         client.sendEvent("joinVote", response);
     }
 
