@@ -8,18 +8,23 @@ import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
 import gram.killergram.domain.vote.exception.VoteNotFoundException;
+import gram.killergram.domain.vote.presentation.dto.adapter.StudentAdapter;
+import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
+import gram.killergram.global.error.ErrorCode;
+import gram.killergram.global.error.ErrorResponse;
 import gram.killergram.global.exception.TokenExpiredException;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,42 +36,44 @@ public class JoinSocketVoteService {
     private final UserFacade userFacade;
 
     @Transactional
-    public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, String token , String voteId) {
-        Vote vote = voteCrudRepository.findById(UUID.fromString(voteId))
+    public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, JoinVoteRequest joinVoteRequest, String token) {
+        Vote vote = voteCrudRepository.findById(joinVoteRequest.getVoteId())
                 .orElseThrow(() -> {
-                    client.sendEvent("error", VoteNotFoundException.EXCEPTION);
+                    sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
                     return VoteNotFoundException.EXCEPTION;
                 });
 
-
-        boolean isAdmin = false;
-
         String managerEmail = vote.getSportId().getManagerEmail();
 
-        if(token == null) throw TokenExpiredException.EXCEPTION;
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
+            sendErrorResponse(client, ErrorCode.EXPIRED_TOKEN);
+            throw TokenExpiredException.EXCEPTION;
+        }
 
-        String userAccountId;
-        if(jwtTokenProvider.validateToken(token)) {
-            userAccountId = jwtTokenProvider.getAuthentication(token).getName();
-        } else throw TokenExpiredException.EXCEPTION;
+        String userAccountId = jwtTokenProvider.getAuthentication(token).getName();
+        boolean isAdmin = managerEmail.equals(userAccountId);
 
-        if(managerEmail.equals(userAccountId)) isAdmin = true;
-
-        UUID userId =  userFacade.getUserId(userAccountId);
+        UUID userId = userFacade.getUserId(userAccountId);
         Student student = studentJpaRepository.findById(userId)
                 .orElseThrow(() -> {
-                    client.sendEvent("error", StudentNotFoundException.EXCEPTION);
+                    sendErrorResponse(client, ErrorCode.STUDENT_NOT_FOUND);
                     return StudentNotFoundException.EXCEPTION;
                 });
 
-        List<VoteUser> voteUser = vote.getVoteUser() != null ? vote.getVoteUser() : Collections.emptyList();
+        Set<VoteUser> voteUser = vote.getVoteUser();
+        Set<StudentAdapter> studentAdapters = voteUser.stream()
+                .map(voteUser1 -> new StudentAdapter(
+                        voteUser1.getStudent().getName(),
+                        voteUser1.getStudent().getSchoolNumber()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        boolean isUserInVote = voteUser.contains(student);
+        boolean isUserInVote = voteUser.stream()
+                .anyMatch(vu -> vu.getStudent().getUserId().equals(student.getUserId()));
 
         return JoinSocketVoteResponse.builder()
                 .sportName(vote.getSportId().getSportName())
                 .ability(student.getAbility())
-                .voteStudents(voteUser)
+                .voteStudents(studentAdapters)
                 .timeSlot(vote.getTimeSlot())
                 .participate(vote.getParticipate())
                 .isJoinMe(isUserInVote)
@@ -74,4 +81,13 @@ public class JoinSocketVoteService {
                 .isAdmin(isAdmin)
                 .build();
     }
+
+    private void sendErrorResponse(SocketIOClient client, ErrorCode errorCode) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(errorCode.getStatus())
+                .message(errorCode.getMessage())
+                .build();
+        client.sendEvent("error", errorResponse);
+    }
 }
+
