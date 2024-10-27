@@ -13,6 +13,7 @@ public enum TimeSlot {
         this.value = value;
     }
 
+    //change value Korean
     public static TimeSlot fromValue(String value) {
         return switch (value) {
             case "점심시간" -> LUNCH_TIME;

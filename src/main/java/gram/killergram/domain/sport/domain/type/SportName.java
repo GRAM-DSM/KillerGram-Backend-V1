@@ -27,6 +27,7 @@ public enum SportName {
     private static final Map<String, SportName> VALUE_MAP = Arrays.stream(values())
             .collect(Collectors.toMap(SportName::getValue, Function.identity()));
 
+    // to change Korean and insert DB as Korean
     public static SportName fromValue(String name) {
         SportName sport = VALUE_MAP.get(name);
         if (sport == null) {

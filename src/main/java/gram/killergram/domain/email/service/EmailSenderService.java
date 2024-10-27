@@ -48,14 +48,17 @@ public class EmailSenderService {
         emailCrudRepository.save(email);
     }
 
+    //generate random authentication code
     private String generateVerificationCode() {
         SecureRandom random = new SecureRandom();
         return String.format("%04d", random.nextInt(10000));
     }
 
+    //to find where is html template
     @Value("${email.template.path}")
     private String templatePath;
 
+    // To script random code in htm then, return html + random code
     private String getHtmlContent(String verificationCode) throws IOException {
         String content = Files.readString(Path.of(templatePath), StandardCharsets.UTF_8);
         String html = content.replace("{{verificationCode}}", verificationCode);

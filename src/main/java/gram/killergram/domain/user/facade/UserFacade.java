@@ -14,10 +14,12 @@ public class UserFacade {
 
     private final UserJpaRepository userJpaRepository;
 
+    // get User through accountId
     public User getByUser(String accountId) {
         return userJpaRepository.findByAccountId(accountId).orElseThrow(() -> UserNotFoundException.EXCEPTION);
     }
 
+    // get User UUID through accountId
     public UUID getUserId(String accountId) {
         return getByUser(accountId).getUserId();
     }

@@ -8,12 +8,10 @@ import gram.killergram.domain.user.exception.UserNotFoundException;
 import gram.killergram.domain.user.repository.UserJpaRepository;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserLoginService {
