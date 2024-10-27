@@ -29,6 +29,7 @@ public enum ErrorCode {
     USER_ALREADY_EXISTS(409, "User Already Exists"),
     SAME_PASSWORD(409, "Same Password"),
 
+    THIS_IS_SERVER_PUNG(500, "Please call Bhyung-hyun or Dong-hyun"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
     private final int status;

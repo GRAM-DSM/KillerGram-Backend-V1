@@ -3,6 +3,7 @@ package gram.killergram.domain.vote.domain;
 import gram.killergram.domain.sport.domain.Sport;
 import gram.killergram.domain.vote.domain.type.Day;
 import gram.killergram.domain.vote.domain.type.TimeSlot;
+import gram.killergram.global.exception.AmolangEguTuzimuenTextAdminGo;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -69,6 +70,8 @@ public class Vote {
     }
 
     public void decreaseParticipate() {
+        if(this.participate - 1 < 0)
+            throw AmolangEguTuzimuenTextAdminGo.EXCEPTION;
         this.participate--;
     }
 
