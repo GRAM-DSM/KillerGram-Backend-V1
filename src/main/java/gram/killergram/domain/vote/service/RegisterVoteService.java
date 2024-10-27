@@ -8,12 +8,13 @@ import gram.killergram.domain.user.facade.UserFacade;
 import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
-import gram.killergram.domain.vote.exception.VoteNotFoundException;
+import gram.killergram.domain.vote.exception.*;
 import gram.killergram.domain.vote.presentation.dto.request.RegisterVoteRequest;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.domain.vote.repository.VoteUserCrudRepository;
 import gram.killergram.global.error.ErrorCode;
 import gram.killergram.global.error.ErrorResponse;
+import gram.killergram.global.exception.TokenExpiredException;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,15 +43,15 @@ public class RegisterVoteService {
 
         if (vote.isEnd()) {
             sendErrorResponse(client, ErrorCode.VOTE_IS_END);
-            return;
+            throw VoteIsEndException.EXCEPTION;
         }
 
         String userAccountId;
-        if (jwtTokenProvider.validateToken(token) && token != null) {
+        if (token == null || jwtTokenProvider.validateToken(token)) {
             userAccountId = jwtTokenProvider.getAuthentication(token).getName();
         } else {
             sendErrorResponse(client, ErrorCode.EXPIRED_TOKEN);
-            return;
+            throw TokenExpiredException.EXCEPTION;
         }
 
         UUID userId = userFacade.getUserId(userAccountId);
@@ -67,45 +68,32 @@ public class RegisterVoteService {
 
         if (isUserInVote) {
             sendErrorResponse(client, ErrorCode.ALREADY_VOTE_REGISTERED);
-            return;
+            throw AlreadyRegisteredVoteException.EXCEPTION;
         }
 
-        if (sport.isPosition()) {
-            if (registerVoteRequest.getPosition() == null) {
-                sendErrorResponse(client, ErrorCode.POSITION_NOT_FOUND);
-                return;
-            }
-
-            VoteUser voteUser = VoteUser.builder()
-                    .vote(vote)
-                    .votePosition(registerVoteRequest.getPosition())
-                    .student(student)
-                    .isAttend(false)
-                    .build();
-
-            voteUserRepository.save(voteUser);
-            vote.addVoteUser(voteUser);
-
-        } else {
-            if (registerVoteRequest.getPosition() != null) {
-                sendErrorResponse(client, ErrorCode.POSITION_NOT_FOUND);
-                return;
-            }
-
-            VoteUser voteUser = VoteUser.builder()
-                    .vote(vote)
-                    .student(student)
-                    .isAttend(false)
-                    .build();
-
-            voteUserRepository.save(voteUser);
-            vote.addVoteUser(voteUser);
+        if (sport.isPosition() && registerVoteRequest.getPosition() == null) {
+            sendErrorResponse(client, ErrorCode.POSITION_NOT_FOUND);
+            throw PositionNotFoundException.EXCEPTION;
         }
-        vote.increaseParticipate();
-        voteCrudRepository.save(vote);
+
+        if (!sport.isPosition() && registerVoteRequest.getPosition() != null) {
+            sendErrorResponse(client, ErrorCode.POSITION_NOT_HAS_SPORT);
+            throw PositionNotHasSportException.EXCEPTION;
+        }
+
+        VoteUser.VoteUserBuilder voteUserBuilder = VoteUser.builder()
+                .vote(vote)
+                .student(student)
+                .isAttend(false);
+
+        if (sport.isPosition()) voteUserBuilder.votePosition(registerVoteRequest.getPosition());
+
+        VoteUser voteUser = voteUserBuilder.build();
+        voteUserRepository.save(voteUser);
+        vote.addVoteUser(voteUser);
     }
 
-    private void sendErrorResponse(SocketIOClient client, ErrorCode errorCode) {
+        private void sendErrorResponse(SocketIOClient client, ErrorCode errorCode) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(errorCode.getStatus())
                 .message(errorCode.getMessage())

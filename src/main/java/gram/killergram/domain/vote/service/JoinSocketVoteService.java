@@ -14,7 +14,9 @@ import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteRespo
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.global.error.ErrorCode;
 import gram.killergram.global.error.ErrorResponse;
+import gram.killergram.global.exception.TokenExpiredException;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +47,7 @@ public class JoinSocketVoteService {
 
         if (token == null || !jwtTokenProvider.validateToken(token)) {
             sendErrorResponse(client, ErrorCode.EXPIRED_TOKEN);
-            return null;
+            throw TokenExpiredException.EXCEPTION;
         }
 
         String userAccountId = jwtTokenProvider.getAuthentication(token).getName();
