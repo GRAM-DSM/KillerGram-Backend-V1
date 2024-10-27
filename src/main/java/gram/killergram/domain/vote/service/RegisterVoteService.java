@@ -47,7 +47,7 @@ public class RegisterVoteService {
         }
 
         String userAccountId;
-        if (token == null || jwtTokenProvider.validateToken(token)) {
+        if (token != null || jwtTokenProvider.validateToken(token)) {
             userAccountId = jwtTokenProvider.getAuthentication(token).getName();
         } else {
             sendErrorResponse(client, ErrorCode.EXPIRED_TOKEN);
