@@ -41,7 +41,7 @@ public class Student {
     @Column(name = "school_number", nullable = false, columnDefinition = "CHAR(20)")
     private String schoolNumber;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "studentId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VoteUser> voteUser = new ArrayList<>();
 
     @Builder

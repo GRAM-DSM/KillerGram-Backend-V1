@@ -1,16 +1,17 @@
 package gram.killergram.domain.vote.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import gram.killergram.domain.sport.domain.Sport;
 import gram.killergram.domain.user.domain.Student;
 import gram.killergram.domain.user.exception.StudentNotFoundException;
 import gram.killergram.domain.user.facade.UserFacade;
 import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
-import gram.killergram.domain.vote.exception.*;
+import gram.killergram.domain.vote.exception.NoRegisteredMyUserFound;
+import gram.killergram.domain.vote.exception.VoteIsEndException;
+import gram.killergram.domain.vote.exception.VoteNotFoundException;
 import gram.killergram.domain.vote.presentation.dto.adapter.SendErrorResponseAdapter;
-import gram.killergram.domain.vote.presentation.dto.request.RegisterVoteRequest;
+import gram.killergram.domain.vote.presentation.dto.request.CancelVoteRequest;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.domain.vote.repository.VoteUserCrudRepository;
 import gram.killergram.global.error.ErrorCode;
@@ -24,19 +25,19 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class RegisterVoteService {
+public class CancelVoteService {
 
     private final VoteCrudRepository voteCrudRepository;
-    private final VoteUserCrudRepository voteUserRepository;
-    private final StudentJpaRepository studentJpaRepository;
+    private final SendErrorResponseAdapter sendErrorResponseAdapter;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserFacade userFacade;
-    private final SendErrorResponseAdapter sendErrorResponseAdapter;
+    private final StudentJpaRepository studentJpaRepository;
+    private final VoteUserCrudRepository voteUserCrudRepository;
 
     @Transactional
-    public void registerVote(SocketIOClient client,
-                             RegisterVoteRequest registerVoteRequest, String token) {
-        Vote vote = voteCrudRepository.findById(registerVoteRequest.getVoteId())
+    public void cancelVote(SocketIOClient client, CancelVoteRequest cancelVoteRequest,
+                           String token) {
+        Vote vote = voteCrudRepository.findById(cancelVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
                     return VoteNotFoundException.EXCEPTION;
@@ -62,38 +63,25 @@ public class RegisterVoteService {
                     return StudentNotFoundException.EXCEPTION;
                 });
 
-        Sport sport = vote.getSportId();
-
         boolean isUserInVote = vote.getVoteUser().stream()
-                .anyMatch(vu -> vu.getStudentId().getUserId().equals(student.getUserId()));
+                .anyMatch(vu -> vu.getStudentId().getUserId().equals(userId));
 
-        if (isUserInVote) {
-            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.ALREADY_VOTE_REGISTERED);
-            throw AlreadyRegisteredVoteException.EXCEPTION;
+        if(!isUserInVote) {
+            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.NO_REGISTERED_MY_USER_FOUND);
+            throw NoRegisteredMyUserFound.EXCEPTION;
         }
+        VoteUser voteUser = vote.getVoteUser().stream()
+                .filter(vu -> vu.getStudentId().getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> {
+                    sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.NO_REGISTERED_MY_USER_FOUND);
+                    throw NoRegisteredMyUserFound.EXCEPTION;
+                });
 
-        if (sport.isPosition() && registerVoteRequest.getPosition() == null) {
-            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.POSITION_NOT_FOUND);
-            throw PositionNotFoundException.EXCEPTION;
-        }
-
-        if (!sport.isPosition() && registerVoteRequest.getPosition() != null) {
-            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.POSITION_NOT_HAS_SPORT);
-            throw PositionNotHasSportException.EXCEPTION;
-        }
-
-        VoteUser.VoteUserBuilder voteUserBuilder = VoteUser.builder()
-                .vote(vote)
-                .studentId(student)
-                .isAttend(false);
-
-        if (sport.isPosition()) voteUserBuilder.votePosition(registerVoteRequest.getPosition());
-
-        VoteUser voteUser = voteUserBuilder.build();
-        voteUserRepository.save(voteUser);
-        vote.addVoteUser(voteUser);
-        vote.increaseParticipate();
+        vote.removeVoteUser(voteUser);
+        vote.decreaseParticipate();
         voteCrudRepository.save(vote);
+
+        voteUserCrudRepository.delete(voteUser);
     }
 }
-
