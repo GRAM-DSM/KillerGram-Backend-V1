@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ public class VoteUser {
     @JoinColumn(name = "student_id", nullable = false)
     private Student studentId;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "vote_id", nullable = false)
     private Vote vote;
@@ -40,4 +42,5 @@ public class VoteUser {
         this.vote = vote;
         this.isAttend = isAttend;
     }
+
 }

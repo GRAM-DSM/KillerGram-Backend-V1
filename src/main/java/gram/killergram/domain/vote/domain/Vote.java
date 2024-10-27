@@ -43,7 +43,7 @@ public class Vote {
     private String timeSlot;
 
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
-    private Set<VoteUser> voteUser;
+    private Set<VoteUser> voteUser = new LinkedHashSet<>();
 
     @Builder
     public Vote(LocalDate voteDate, Integer participate, boolean isEnd, Sport sportId, String day, String timeSlot) {
@@ -74,6 +74,11 @@ public class Vote {
 
     public void addVoteUser(VoteUser voteUser) {
         this.voteUser.add(voteUser);
+    }
+
+    public void removeVoteUser(VoteUser voteUser) {
+        voteUser.setVote(null);
+        this.voteUser.remove(voteUser);
     }
 
     public Set<VoteUser> getVoteUser() {

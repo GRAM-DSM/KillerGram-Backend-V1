@@ -70,8 +70,7 @@ public class CancelVoteService {
             sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.NO_REGISTERED_MY_USER_FOUND);
             throw NoRegisteredMyUserFound.EXCEPTION;
         }
-
-        VoteUser targetVoteUser = vote.getVoteUser().stream()
+        VoteUser voteUser = vote.getVoteUser().stream()
                 .filter(vu -> vu.getStudentId().getUserId().equals(userId))
                 .findFirst()
                 .orElseThrow(() -> {
@@ -79,15 +78,10 @@ public class CancelVoteService {
                     throw NoRegisteredMyUserFound.EXCEPTION;
                 });
 
-        vote.getVoteUser().remove(targetVoteUser);
+        vote.removeVoteUser(voteUser);
         vote.decreaseParticipate();
         voteCrudRepository.save(vote);
 
-        VoteUser voteUser = voteUserCrudRepository.findByStudentId(student)
-                .orElseThrow(() -> {
-                    sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.NO_REGISTERED_MY_USER_FOUND);
-                    return NoRegisteredMyUserFound.EXCEPTION;
-                });
-        voteUserCrudRepository.save(voteUser);
+        voteUserCrudRepository.delete(voteUser);
     }
 }
