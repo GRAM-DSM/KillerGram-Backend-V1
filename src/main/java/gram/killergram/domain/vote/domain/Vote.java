@@ -71,7 +71,8 @@ public class Vote {
 
     public void decreaseParticipate() {
         if(this.participate - 1 < 0)
-            throw AmolangEguTuzimuenTextAdminGo.EXCEPTION;
+            throw AmolangEguTuzimuenTextAdminGo.EXCEPTION; /* First of all, this code cannot be executed
+            due to server logic, but I made an exception just in case */
         this.participate--;
     }
 

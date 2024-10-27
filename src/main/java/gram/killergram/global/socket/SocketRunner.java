@@ -1,17 +1,13 @@
 package gram.killergram.global.socket;
 
 import com.corundumstudio.socketio.SocketIOServer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gram.killergram.domain.vote.presentation.VoteController;
 import gram.killergram.domain.vote.presentation.dto.request.CancelVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.request.RegisterVoteRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
 
 @Component
 @RequiredArgsConstructor

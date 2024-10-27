@@ -11,7 +11,6 @@ import gram.killergram.domain.vote.service.JoinSocketVoteService;
 import gram.killergram.domain.vote.service.RegisterVoteService;
 import gram.killergram.global.exception.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,6 +46,7 @@ public class VoteController {
 
         registerVoteService.registerVote(client, request, token);
 
+        // broadcast Changes
         JoinVoteRequest joinVoteRequest = new JoinVoteRequest(request.getVoteId());
         JoinSocketVoteResponse updatedResponse = joinSocketVoteService.joinSocketVote(client, joinVoteRequest, token);
 
@@ -64,6 +64,7 @@ public class VoteController {
 
         cancelVoteService.cancelVote(client, request, token);
 
+        // broadcast Changes
         JoinVoteRequest joinVoteRequest = new JoinVoteRequest(request.getVoteId());
         JoinSocketVoteResponse updatedResponse = joinSocketVoteService.joinSocketVote(client, joinVoteRequest, token);
 

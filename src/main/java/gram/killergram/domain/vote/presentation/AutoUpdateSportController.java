@@ -17,9 +17,12 @@ import java.util.Map;
 public class AutoUpdateSportController {
     private final CreateVoteService createVoteService;
 
+    // default Admin email
     @Value("${email.gram}")
     private String defaultEmail;
 
+    // at 12:35 pm and 17(5):35 pm
+    // Find today day of the week, and find correct Sport fit for day of the week
     @Scheduled(cron = "0 35 12,17 * * *")
     public void delegateDay() {
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -47,6 +50,7 @@ public class AutoUpdateSportController {
         List<Object[]> sportVotes = sportVoteMap.get(dayOfWeek);
 
         if (sportVotes != null) {
+            // if Today Friday or Saturday or Sunday this block not work
             for (Object[] sportVote : sportVotes) {
                 createVoteService.execute(defaultEmail, (SportName) sportVote[0], (int) sportVote[1], (boolean) sportVote[2]);
             }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class DeleteDbFalseOldService {
     private final EmailCrudRepository emailCrudRepository;
 
+    // at 02:00 am
     @Transactional
     @Scheduled(cron = "0 0 2 * * ?")
     public void deleteExpiredEmails() {

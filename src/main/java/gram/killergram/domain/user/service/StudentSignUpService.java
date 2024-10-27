@@ -9,20 +9,15 @@ import gram.killergram.domain.user.presentation.dto.request.StudentSignUpRequest
 import gram.killergram.domain.user.domain.Student;
 import gram.killergram.domain.user.domain.User;
 import gram.killergram.domain.user.domain.type.Authority;
-import gram.killergram.domain.user.facade.UserFacade;
 import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.user.repository.UserJpaRepository;
-import gram.killergram.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StudentSignUpService {

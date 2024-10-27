@@ -2,7 +2,6 @@ package gram.killergram.domain.vote.presentation.dto.response;
 
 import gram.killergram.domain.sport.domain.type.SportName;
 import gram.killergram.domain.user.domain.type.Ability;
-import gram.killergram.domain.vote.domain.VoteUser;
 import gram.killergram.domain.vote.domain.type.TimeSlot;
 import gram.killergram.domain.vote.presentation.dto.adapter.StudentAdapter;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Builder

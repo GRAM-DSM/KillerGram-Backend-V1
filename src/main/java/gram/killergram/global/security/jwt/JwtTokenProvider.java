@@ -3,7 +3,6 @@ package gram.killergram.global.security.jwt;
 import gram.killergram.domain.user.domain.RefreshToken;
 import gram.killergram.domain.user.presentation.dto.response.TokenResponse;
 import gram.killergram.domain.user.repository.RefreshTokenJpaRepository;
-import gram.killergram.domain.user.repository.UserJpaRepository;
 import gram.killergram.global.exception.TokenExpiredException;
 import gram.killergram.global.exception.TokenInvalidException;
 import gram.killergram.global.security.auth.AuthDetailsService;
@@ -19,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.security.SignatureException;
 import java.util.Date;
 
 @Component
@@ -27,11 +25,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
-
-    private final UserJpaRepository userJpaRepository;
-
     private final AuthDetailsService authDetailsService;
-
     private final RefreshTokenJpaRepository refreshTokenJpaRepository;
 
     public String createAccessToken(String accountId) {

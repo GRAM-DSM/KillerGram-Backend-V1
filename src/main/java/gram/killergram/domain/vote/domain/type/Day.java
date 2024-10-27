@@ -27,6 +27,7 @@ public enum Day {
         }
     }
 
+    //change value Korean
     public static Day fromValue(String name) {
         Day day = NAME_TO_DAY_MAP.get(name);
         if (day != null) {

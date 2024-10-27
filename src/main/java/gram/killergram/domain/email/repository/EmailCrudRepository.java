@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Repository
 public interface EmailCrudRepository extends CrudRepository<Email, String> {
 
+    // To delete garbage authentication information
     @Modifying
     @Transactional
     void deleteByCertifiedTimeBefore(LocalDateTime currentTime);
