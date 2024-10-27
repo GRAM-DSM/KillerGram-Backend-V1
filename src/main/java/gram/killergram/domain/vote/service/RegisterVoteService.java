@@ -8,14 +8,12 @@ import gram.killergram.domain.user.facade.UserFacade;
 import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
-import gram.killergram.domain.vote.exception.PositionNotFoundException;
-import gram.killergram.domain.vote.exception.VoteIsEndException;
 import gram.killergram.domain.vote.exception.VoteNotFoundException;
 import gram.killergram.domain.vote.presentation.dto.request.RegisterVoteRequest;
-import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
 import gram.killergram.domain.vote.repository.VoteUserCrudRepository;
-import gram.killergram.global.exception.TokenExpiredException;
+import gram.killergram.global.error.ErrorCode;
+import gram.killergram.global.error.ErrorResponse;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,45 +30,50 @@ public class RegisterVoteService {
     private final StudentJpaRepository studentJpaRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserFacade userFacade;
-    private final JoinSocketVoteService joinSocketVoteService;
 
     @Transactional
     public void registerVote(SocketIOClient client,
                              RegisterVoteRequest registerVoteRequest, String token) {
         Vote vote = voteCrudRepository.findById(registerVoteRequest.getVoteId())
                 .orElseThrow(() -> {
-                    client.sendEvent("error", VoteNotFoundException.EXCEPTION);
+                    sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
                     return VoteNotFoundException.EXCEPTION;
                 });
 
-        if(vote.isEnd()) {
-            client.sendEvent("error", VoteIsEndException.EXCEPTION);
-            throw VoteIsEndException.EXCEPTION;
-        }
-
-        if(token == null) {
-            client.sendEvent("error", TokenExpiredException.EXCEPTION);
-            throw TokenExpiredException.EXCEPTION;
+        if (vote.isEnd()) {
+            sendErrorResponse(client, ErrorCode.VOTE_IS_END);
+            return;
         }
 
         String userAccountId;
-        if(jwtTokenProvider.validateToken(token)) {
+        if (jwtTokenProvider.validateToken(token) && token != null) {
             userAccountId = jwtTokenProvider.getAuthentication(token).getName();
-        } else throw TokenExpiredException.EXCEPTION;
+        } else {
+            sendErrorResponse(client, ErrorCode.EXPIRED_TOKEN);
+            return;
+        }
 
-        UUID userId =  userFacade.getUserId(userAccountId);
+        UUID userId = userFacade.getUserId(userAccountId);
         Student student = studentJpaRepository.findById(userId)
                 .orElseThrow(() -> {
-                    client.sendEvent("error", StudentNotFoundException.EXCEPTION);
+                    sendErrorResponse(client, ErrorCode.STUDENT_NOT_FOUND);
                     return StudentNotFoundException.EXCEPTION;
                 });
 
         Sport sport = vote.getSportId();
 
-        if(sport.isPosition()) {
-            if(registerVoteRequest.getPosition() == null) {
-                client.sendEvent("error", PositionNotFoundException.EXCEPTION);
-                throw PositionNotFoundException.EXCEPTION;
+        boolean isUserInVote = vote.getVoteUser().stream()
+                .anyMatch(vu -> vu.getStudent().getUserId().equals(student.getUserId()));
+
+        if (isUserInVote) {
+            sendErrorResponse(client, ErrorCode.ALREADY_VOTE_REGISTERED);
+            return;
+        }
+
+        if (sport.isPosition()) {
+            if (registerVoteRequest.getPosition() == null) {
+                sendErrorResponse(client, ErrorCode.POSITION_NOT_FOUND);
+                return;
             }
 
             VoteUser voteUser = VoteUser.builder()
@@ -82,13 +85,11 @@ public class RegisterVoteService {
 
             voteUserRepository.save(voteUser);
             vote.addVoteUser(voteUser);
-            vote.increaseParticipate();
-            voteCrudRepository.save(vote);
 
         } else {
-            if(registerVoteRequest.getPosition() != null) {
-                client.sendEvent("error", PositionNotFoundException.EXCEPTION);
-                throw PositionNotFoundException.EXCEPTION;
+            if (registerVoteRequest.getPosition() != null) {
+                sendErrorResponse(client, ErrorCode.POSITION_NOT_FOUND);
+                return;
             }
 
             VoteUser voteUser = VoteUser.builder()
@@ -99,8 +100,17 @@ public class RegisterVoteService {
 
             voteUserRepository.save(voteUser);
             vote.addVoteUser(voteUser);
-            vote.increaseParticipate();
-            voteCrudRepository.save(vote);
         }
+        vote.increaseParticipate();
+        voteCrudRepository.save(vote);
+    }
+
+    private void sendErrorResponse(SocketIOClient client, ErrorCode errorCode) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(errorCode.getStatus())
+                .message(errorCode.getMessage())
+                .build();
+        client.sendEvent("error", errorResponse);
     }
 }
+

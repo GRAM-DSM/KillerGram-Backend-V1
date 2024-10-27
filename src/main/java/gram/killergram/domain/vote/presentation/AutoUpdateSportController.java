@@ -20,8 +20,7 @@ public class AutoUpdateSportController {
     @Value("${email.gram}")
     private String defaultEmail;
 
-//    @Scheduled(cron = "0 35 12,17 * * *")
-    @Scheduled(cron = "0 38 22 * * *")
+    @Scheduled(cron = "0 35 12,17 * * *")
     public void delegateDay() {
         LocalDateTime localDateTime = LocalDateTime.now();
         DayOfWeek dayOfWeek = localDateTime.getDayOfWeek();

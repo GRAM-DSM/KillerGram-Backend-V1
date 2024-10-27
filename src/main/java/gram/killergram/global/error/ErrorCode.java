@@ -24,6 +24,7 @@ public enum ErrorCode {
     EMAIL_VERIFICATION_NOT_FOUND(404, "Email Verification Not Found"),
     USER_NOT_FOUND(404, "User Not Found"),
 
+    ALREADY_VOTE_REGISTERED(409, "Already Vote Registered"),
     USER_ALREADY_EXISTS(409, "User Already Exists"),
     SAME_PASSWORD(409, "Same Password"),
 

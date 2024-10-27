@@ -12,7 +12,8 @@ import gram.killergram.domain.vote.presentation.dto.adapter.StudentAdapter;
 import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
-import gram.killergram.global.exception.TokenExpiredException;
+import gram.killergram.global.error.ErrorCode;
+import gram.killergram.global.error.ErrorResponse;
 import gram.killergram.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,31 +37,24 @@ public class JoinSocketVoteService {
     public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, JoinVoteRequest joinVoteRequest, String token) {
         Vote vote = voteCrudRepository.findById(joinVoteRequest.getVoteId())
                 .orElseThrow(() -> {
-                    client.sendEvent("error", VoteNotFoundException.EXCEPTION);
+                    sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
                     return VoteNotFoundException.EXCEPTION;
                 });
 
-
-        boolean isAdmin = false;
-
         String managerEmail = vote.getSportId().getManagerEmail();
 
-        if(token == null) {
-            client.sendEvent("error", TokenExpiredException.EXCEPTION);
-            throw TokenExpiredException.EXCEPTION;
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
+            sendErrorResponse(client, ErrorCode.EXPIRED_TOKEN);
+            return null;
         }
 
-        String userAccountId;
-        if(jwtTokenProvider.validateToken(token)) {
-            userAccountId = jwtTokenProvider.getAuthentication(token).getName();
-        } else throw TokenExpiredException.EXCEPTION;
+        String userAccountId = jwtTokenProvider.getAuthentication(token).getName();
+        boolean isAdmin = managerEmail.equals(userAccountId);
 
-        if(managerEmail.equals(userAccountId)) isAdmin = true;
-
-        UUID userId =  userFacade.getUserId(userAccountId);
+        UUID userId = userFacade.getUserId(userAccountId);
         Student student = studentJpaRepository.findById(userId)
                 .orElseThrow(() -> {
-                    client.sendEvent("error", StudentNotFoundException.EXCEPTION);
+                    sendErrorResponse(client, ErrorCode.STUDENT_NOT_FOUND);
                     return StudentNotFoundException.EXCEPTION;
                 });
 
@@ -85,4 +79,13 @@ public class JoinSocketVoteService {
                 .isAdmin(isAdmin)
                 .build();
     }
+
+    private void sendErrorResponse(SocketIOClient client, ErrorCode errorCode) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(errorCode.getStatus())
+                .message(errorCode.getMessage())
+                .build();
+        client.sendEvent("error", errorResponse);
+    }
 }
+
