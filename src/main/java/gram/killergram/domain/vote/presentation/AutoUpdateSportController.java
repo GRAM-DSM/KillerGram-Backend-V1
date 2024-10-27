@@ -44,7 +44,7 @@ public class AutoUpdateSportController {
                 )
         );
 
-        List<Object[]> sportVotes = sportVoteMap.get(DayOfWeek.MONDAY);
+        List<Object[]> sportVotes = sportVoteMap.get(dayOfWeek);
 
         if (sportVotes != null) {
             for (Object[] sportVote : sportVotes) {
