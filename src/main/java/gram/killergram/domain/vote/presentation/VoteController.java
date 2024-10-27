@@ -29,7 +29,8 @@ public class VoteController {
         }
 
         JoinSocketVoteResponse response = joinSocketVoteService.joinSocketVote(client, joinVoteRequest, token);
-        client.sendEvent("joinVote", response);
+        client.joinRoom(joinVoteRequest.getVoteId().toString());
+        client.getNamespace().getRoomOperations(joinVoteRequest.getVoteId().toString()).sendEvent("join", response);
     }
 
     @OnEvent("register")
@@ -46,6 +47,6 @@ public class VoteController {
         JoinVoteRequest joinVoteRequest = new JoinVoteRequest(request.getVoteId());
         JoinSocketVoteResponse updatedResponse = joinSocketVoteService.joinSocketVote(client, joinVoteRequest, token);
 
-        client.getNamespace().getBroadcastOperations().sendEvent("joinVote", updatedResponse);
+        client.getNamespace().getRoomOperations(request.getVoteId().toString()).sendEvent("join", updatedResponse);
     }
 }

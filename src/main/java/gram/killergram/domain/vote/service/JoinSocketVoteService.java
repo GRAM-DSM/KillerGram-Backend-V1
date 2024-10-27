@@ -8,6 +8,7 @@ import gram.killergram.domain.user.repository.StudentJpaRepository;
 import gram.killergram.domain.vote.domain.Vote;
 import gram.killergram.domain.vote.domain.VoteUser;
 import gram.killergram.domain.vote.exception.VoteNotFoundException;
+import gram.killergram.domain.vote.presentation.dto.adapter.StudentAdapter;
 import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.response.JoinSocketVoteResponse;
 import gram.killergram.domain.vote.repository.VoteCrudRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,13 +65,19 @@ public class JoinSocketVoteService {
                 });
 
         Set<VoteUser> voteUser = vote.getVoteUser();
+        Set<StudentAdapter> studentAdapters = voteUser.stream()
+                .map(voteUser1 -> new StudentAdapter(
+                        voteUser1.getStudent().getName(),
+                        voteUser1.getStudent().getSchoolNumber()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        boolean isUserInVote = voteUser.contains(student);
+        boolean isUserInVote = voteUser.stream()
+                .anyMatch(vu -> vu.getStudent().getUserId().equals(student.getUserId()));
 
         return JoinSocketVoteResponse.builder()
                 .sportName(vote.getSportId().getSportName())
                 .ability(student.getAbility())
-                .voteStudents(voteUser)
+                .voteStudents(studentAdapters)
                 .timeSlot(vote.getTimeSlot())
                 .participate(vote.getParticipate())
                 .isJoinMe(isUserInVote)
