@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gram.killergram.domain.vote.presentation.VoteController;
+import gram.killergram.domain.vote.presentation.dto.request.CancelVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.request.JoinVoteRequest;
 import gram.killergram.domain.vote.presentation.dto.request.RegisterVoteRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,10 @@ public class SocketRunner implements CommandLineRunner {
         socketIOServer.addEventListener("register", RegisterVoteRequest.class,
                 (client, registerVoteRequest, ackSender) -> {
                     voteController.registerSocketVote(client, registerVoteRequest);
+                });
+        socketIOServer.addEventListener("cancel", CancelVoteRequest.class,
+                (client, cancelVoteRequest, ackSender) -> {
+                    voteController.cancelSocketVote(client, cancelVoteRequest);
                 });
         socketIOServer.start();
     }

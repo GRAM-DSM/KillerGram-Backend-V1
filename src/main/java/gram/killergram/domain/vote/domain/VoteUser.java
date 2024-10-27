@@ -26,17 +26,17 @@ public class VoteUser {
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
+    private Student studentId;
 
     @ManyToOne
     @JoinColumn(name = "vote_id", nullable = false)
     private Vote vote;
 
     @Builder
-    public VoteUser(boolean isAttend, Integer votePosition, Student student, Vote vote) {
+    public VoteUser(boolean isAttend, Integer votePosition, Student studentId, Vote vote) {
         this.voteStudent = UUID.randomUUID();
         this.votePosition = votePosition;
-        this.student = student;
+        this.studentId = studentId;
         this.vote = vote;
         this.isAttend = isAttend;
     }

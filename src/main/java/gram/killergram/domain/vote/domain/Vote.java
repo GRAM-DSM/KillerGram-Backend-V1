@@ -68,6 +68,10 @@ public class Vote {
         this.participate++;
     }
 
+    public void decreaseParticipate() {
+        this.participate--;
+    }
+
     public void addVoteUser(VoteUser voteUser) {
         this.voteUser.add(voteUser);
     }
