@@ -40,7 +40,7 @@ public class RegisterVoteService {
             sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
             throw VoteNotFoundException.EXCEPTION;
         }
-        
+
         Vote vote = voteCrudRepository.findById(registerVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
@@ -94,12 +94,15 @@ public class RegisterVoteService {
 
         if (sport.isPosition() && registerVoteRequest.getPosition() != null) {
             int position = registerVoteRequest.getPosition();
-            if (position >= 1 && position <= 9) {
+            final int MIN_POSITION = 1;
+            final int MAX_POSITION = 9;
+            final int MAX_PLAYERS_PER_POSITION = 2;
+            if (position >= MIN_POSITION && position <= MAX_POSITION) {
                 long count = vote.getVoteUser().stream()
                         .filter(vu -> vu.getVote().getVoteId().equals(vote.getVoteId()) && vu.getVotePosition() != null && vu.getVotePosition() == position)
                         .count();
 
-                if (count >= 2) {
+                if (count >= MAX_PLAYERS_PER_POSITION) {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.POSITION_DUPLICATE);
                     throw PositionDuplicateException.EXCEPTION;
                 }
