@@ -2,6 +2,7 @@ package gram.killergram.domain.vote.presentation;
 
 import gram.killergram.domain.sport.domain.type.SportName;
 import gram.killergram.domain.vote.service.CreateVoteService;
+import gram.killergram.domain.vote.service.VoteCloseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AutoUpdateSportController {
     private final CreateVoteService createVoteService;
+    private final VoteCloseService voteCloseService;
 
     // default Admin email
     @Value("${email.gram}")
@@ -55,5 +57,11 @@ public class AutoUpdateSportController {
                 createVoteService.execute(defaultEmail, (SportName) sportVote[0], (int) sportVote[1], (boolean) sportVote[2]);
             }
         }
+    }
+
+    // at 12:55 pm and 17(5):55 pm
+    @Scheduled(cron = "0 27 12,17 * * *")
+    public void closeVote() {
+        voteCloseService.closeVote();
     }
 }
