@@ -36,7 +36,11 @@ public class RegisterVoteService {
     @Transactional
     public void registerVote(SocketIOClient client,
                              RegisterVoteRequest registerVoteRequest, String token) {
-
+        if(registerVoteRequest.getVoteId() == null) {
+            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
+            throw VoteNotFoundException.EXCEPTION;
+        }
+        
         Vote vote = voteCrudRepository.findById(registerVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);

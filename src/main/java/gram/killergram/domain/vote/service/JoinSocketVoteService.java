@@ -37,6 +37,11 @@ public class JoinSocketVoteService {
 
     @Transactional
     public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, JoinVoteRequest joinVoteRequest, String token) {
+        if(joinVoteRequest.getVoteId() == null) {
+            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
+            throw VoteNotFoundException.EXCEPTION;
+        }
+
         Vote vote = voteCrudRepository.findById(joinVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);

@@ -37,6 +37,11 @@ public class CancelVoteService {
     @Transactional
     public void cancelVote(SocketIOClient client, CancelVoteRequest cancelVoteRequest,
                            String token) {
+        if(cancelVoteRequest.getVoteId() == null) {
+            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
+            throw VoteNotFoundException.EXCEPTION;
+        }
+
         Vote vote = voteCrudRepository.findById(cancelVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
