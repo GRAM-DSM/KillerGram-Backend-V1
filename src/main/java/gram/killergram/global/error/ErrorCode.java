@@ -11,11 +11,13 @@ public enum ErrorCode {
     PASSWORD_MISMATCH(401, "Password Mismatch"),
     VERIFICATION_CODE_MISMATCH(401, "Verification code mismatch"),
     INVALID_TOKEN(401, "Invalid Token"),
+    INVALID_POSITION(401, "Invalid Position"),
 
     POSITION_NOT_HAS_SPORT(403, "Sport doesn't have position"),
     UNAUTHORIZED_REQUEST(403, "Unauthorized Request"),
     VOTE_IS_END(403, "Vote is already end"),
     NO_REGISTERED_MY_USER_FOUND(403, "No registered my user found"),
+    POSITION_DUPLICATE(403, "Position duplicate"),
 
     POSITION_NOT_FOUND(404, "Position not found"),
     STUDENT_NOT_FOUND(404, "Student Not Found"),

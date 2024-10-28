@@ -2,6 +2,7 @@ package gram.killergram.domain.vote.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import gram.killergram.domain.sport.domain.Sport;
+import gram.killergram.domain.sport.domain.type.SportName;
 import gram.killergram.domain.user.domain.Student;
 import gram.killergram.domain.user.exception.StudentNotFoundException;
 import gram.killergram.domain.user.facade.UserFacade;
@@ -87,13 +88,28 @@ public class RegisterVoteService {
                 .studentId(student)
                 .isAttend(false);
 
-        if (sport.isPosition()) voteUserBuilder.votePosition(registerVoteRequest.getPosition());
+        if (sport.isPosition() && registerVoteRequest.getPosition() != null) {
+            int position = registerVoteRequest.getPosition();
+            if (position >= 1 && position <= 9) {
+                long count = vote.getVoteUser().stream()
+                        .filter(vu -> vu.getVote().getVoteId().equals(vote.getVoteId()) && vu.getVotePosition() != null && vu.getVotePosition() == position)
+                        .count();
 
-        VoteUser voteUser = voteUserBuilder.build();
-        voteUserRepository.save(voteUser);
-        vote.addVoteUser(voteUser);
-        vote.increaseParticipate();
-        voteCrudRepository.save(vote);
+                if (count >= 2) {
+                    sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.POSITION_DUPLICATE);
+                    throw PositionDuplicateException.EXCEPTION;
+                }
+                voteUserBuilder.votePosition(position);
+            } else {
+                sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.INVALID_POSITION);
+                throw InvalidPositionException.EXCEPTION;
+            }
+        }
+            VoteUser voteUser = voteUserBuilder.build();
+            voteUserRepository.save(voteUser);
+            vote.addVoteUser(voteUser);
+            vote.increaseParticipate();
+            voteCrudRepository.save(vote);
     }
 }
 
