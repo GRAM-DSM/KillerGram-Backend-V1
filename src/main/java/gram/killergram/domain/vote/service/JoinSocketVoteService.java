@@ -69,7 +69,8 @@ public class JoinSocketVoteService {
         Set<StudentAdapter> studentAdapters = voteUser.stream()
                 .map(voteUser1 -> new StudentAdapter(
                         voteUser1.getStudentId().getName(),
-                        voteUser1.getStudentId().getSchoolNumber()))
+                        voteUser1.getStudentId().getSchoolNumber(),
+                        voteUser1.getVotePosition()))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
         boolean isUserInVote = voteUser.stream()
