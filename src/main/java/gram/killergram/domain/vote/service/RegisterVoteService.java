@@ -2,7 +2,6 @@ package gram.killergram.domain.vote.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import gram.killergram.domain.sport.domain.Sport;
-import gram.killergram.domain.sport.domain.type.SportName;
 import gram.killergram.domain.user.domain.Student;
 import gram.killergram.domain.user.exception.StudentNotFoundException;
 import gram.killergram.domain.user.facade.UserFacade;
@@ -37,6 +36,7 @@ public class RegisterVoteService {
     @Transactional
     public void registerVote(SocketIOClient client,
                              RegisterVoteRequest registerVoteRequest, String token) {
+
         Vote vote = voteCrudRepository.findById(registerVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
