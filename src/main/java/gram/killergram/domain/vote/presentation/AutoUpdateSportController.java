@@ -33,15 +33,15 @@ public class AutoUpdateSportController {
         Map<DayOfWeek, List<Object[]>> sportVoteMap = Map.of(
                 DayOfWeek.MONDAY, List.of(
                         new Object[]{SportName.BADMINTON, 20, false},
-                        new Object[]{SportName.SOCCER, 16, false}
+                        new Object[]{SportName.SOCCER, 18, false}
                 ),
                 DayOfWeek.TUESDAY, List.of(
                         new Object[]{SportName.BASKETBALL, 14, false},
-                        new Object[]{SportName.SOCCER, 16, false}
+                        new Object[]{SportName.SOCCER, 18, false}
                 ),
                 DayOfWeek.WEDNESDAY, List.of(
                         new Object[]{SportName.VOLLEYBALL, 18, true},
-                        new Object[]{SportName.SOCCER, 16, false}
+                        new Object[]{SportName.SOCCER, 18, false}
                 ),
                 DayOfWeek.THURSDAY, List.of(
                         new Object[]{SportName.WOMAN_SPORTS, 20, false},
