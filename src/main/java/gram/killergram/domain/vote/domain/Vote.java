@@ -88,4 +88,8 @@ public class Vote {
     public Set<VoteUser> getVoteUser() {
         return new LinkedHashSet<>(voteUser);
     }
+
+    public void updateIsEnd(boolean isEnd) {
+        this.isEnd = isEnd;
+    }
 }

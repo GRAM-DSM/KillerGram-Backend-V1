@@ -10,6 +10,7 @@ import gram.killergram.domain.vote.service.CancelVoteService;
 import gram.killergram.domain.vote.service.JoinSocketVoteService;
 import gram.killergram.domain.vote.service.RegisterVoteService;
 import gram.killergram.global.exception.TokenExpiredException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ public class VoteController {
     private final CancelVoteService cancelVoteService;
 
     @OnEvent("join")
-    public void joinSocketVote(SocketIOClient client, JoinVoteRequest joinVoteRequest) {
+    public void joinSocketVote(SocketIOClient client, @Valid JoinVoteRequest joinVoteRequest) {
         String token = client.get("token");
         if (token == null) {
             client.sendEvent("error", TokenExpiredException.EXCEPTION);
@@ -36,7 +37,7 @@ public class VoteController {
     }
 
     @OnEvent("register")
-    public void registerSocketVote(SocketIOClient client, RegisterVoteRequest request) {
+    public void registerSocketVote(SocketIOClient client, @Valid RegisterVoteRequest request) {
         String token = client.get("token");
         if (token == null) {
             client.sendEvent("error", TokenExpiredException.EXCEPTION);
@@ -54,7 +55,7 @@ public class VoteController {
     }
 
     @OnEvent("cancel")
-    public void cancelSocketVote(SocketIOClient client, CancelVoteRequest request) {
+    public void cancelSocketVote(SocketIOClient client, @Valid CancelVoteRequest request) {
         String token = client.get("token");
         if (token == null) {
             client.sendEvent("error", TokenExpiredException.EXCEPTION);

@@ -12,4 +12,6 @@ public class StudentAdapter {
     private String name;
 
     private String schoolNumber;
+
+    private Integer position;
 }

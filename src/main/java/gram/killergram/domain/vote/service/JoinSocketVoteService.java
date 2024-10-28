@@ -37,6 +37,11 @@ public class JoinSocketVoteService {
 
     @Transactional
     public JoinSocketVoteResponse joinSocketVote(SocketIOClient client, JoinVoteRequest joinVoteRequest, String token) {
+        if(joinVoteRequest.getVoteId() == null) {
+            sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
+            throw VoteNotFoundException.EXCEPTION;
+        }
+
         Vote vote = voteCrudRepository.findById(joinVoteRequest.getVoteId())
                 .orElseThrow(() -> {
                     sendErrorResponseAdapter.sendErrorResponse(client, ErrorCode.VOTE_NOT_FOUND);
@@ -64,7 +69,8 @@ public class JoinSocketVoteService {
         Set<StudentAdapter> studentAdapters = voteUser.stream()
                 .map(voteUser1 -> new StudentAdapter(
                         voteUser1.getStudentId().getName(),
-                        voteUser1.getStudentId().getSchoolNumber()))
+                        voteUser1.getStudentId().getSchoolNumber(),
+                        voteUser1.getVotePosition()))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
         boolean isUserInVote = voteUser.stream()
