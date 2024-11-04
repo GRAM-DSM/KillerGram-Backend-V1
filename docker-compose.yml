@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   app:
     build:
@@ -7,32 +9,32 @@ services:
       - "8080:8080"
       - "8082:8082"
     environment:
-      - MAIL_USERNAME=${MAIL_USERNAME}
-      - MAIL_PASSWORD=${MAIL_PASSWORD}
       - DB_URL=${DB_URL}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DDL=none
-      - SQL_SHOW=true
-      - SQL_FORMAT=true
-      - SECRET=${SECRET}
+      - DDL=${DDL}
+      - SQL_SHOW=${SQL_SHOW}
+      - SQL_FORMAT=${SQL_FORMAT}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - SOCKET_HOST=${SOCKET_HOST}
       - SOCKET_PORT=${SOCKET_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     depends_on:
       - db
       - redis
     networks:
       - app-network
+    entrypoint: ["java", "-jar", "/app.jar"]
 
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_NAME}
-      MYSQL_USER: ${MYSQL_USERNAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: killergram
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
