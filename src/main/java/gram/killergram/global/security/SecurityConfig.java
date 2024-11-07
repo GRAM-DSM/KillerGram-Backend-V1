@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/login",
                                 "/users/signup",
                                 "/users/reset-password",
-                                "/users/send-verification",
+                                "/users/send-verification/**",
                                 "/users/verify-email",
                                 "/users/token").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/users/delete-user").authenticated()

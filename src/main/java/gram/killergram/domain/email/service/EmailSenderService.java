@@ -36,7 +36,7 @@ public class EmailSenderService {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom(senderEmail);
+        helper.setFrom("me@donghyun.cc");
         helper.setTo(emailVerificationRequest.getEmail());
         helper.setSubject("KillerGram 이메일 인증");
         helper.setText(htmlContent, true);
