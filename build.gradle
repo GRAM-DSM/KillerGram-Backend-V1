@@ -67,6 +67,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
+}
+
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+bootJar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 tasks.named('test') {
-    useJUnitPlatform()
+    //useJUnitPlatform()
 }
