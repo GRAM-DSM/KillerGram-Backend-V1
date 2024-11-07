@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public String handleAccessDeniedException(Exception e) {
-        log.error("Error: {}", e.getMessage());
-        return ("Error: " +  e.getMessage());
+        log.error("Error: {}", e);
+        return "Server Error";
     }
 }

@@ -20,8 +20,8 @@ spring:
     database: mysql
     hibernate:
       dialect: org.hibernate.dialect.MySQLDialect
-      ddl-auto: ${DDL:none}
-    show-sql: ${SQL_SHOW:true}
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         format_sql: ${SQL_FORMAT:true}
