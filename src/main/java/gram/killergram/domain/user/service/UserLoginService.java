@@ -25,11 +25,11 @@ public class UserLoginService {
 
         User user = userJpaRepository.findByAccountId(request.getAccountId())
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
-
+        System.out.print("A");
         if(!passwordEncoder.matches(request.getPassword(),user.getPassword())) {
             throw PasswordMismatchException.EXCEPTION;
         }
-
+        System.out.print("A2");
         String userAccessToken = jwtTokenProvider.createAccessToken(user.getAccountId());
         String userRefreshToken = jwtTokenProvider.createRefreshToken(user.getAccountId());
 
